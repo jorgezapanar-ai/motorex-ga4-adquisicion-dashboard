@@ -81,7 +81,8 @@ section{padding:34px 0;border-top:1px solid var(--line)}
 .chip-manual{display:none;font-size:11px;font-weight:700;color:#8b4d8f;background:#f3e8f4;padding:4px 10px;border-radius:999px}
 .chip-manual.show{display:inline-block}
 .manualbox{border:1px dashed var(--violet);border-radius:10px;padding:12px;margin-top:10px;background:#fdfcff}
-.manualbox .mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.manualbox .mrow{margin-top:8px}
 .cta{border:0;cursor:pointer;font:700 13px Montserrat,sans-serif;padding:11px 18px;border-radius:10px;background:var(--grad);color:#fff}
 .cta:hover{filter:brightness(1.05)}
 .cta:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
@@ -184,6 +185,53 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
   section{padding:26px 0}
   .bar-row{grid-template-columns:110px 1fr 60px}
 }
+/* ========== parche anti-overlap y orden ========== */
+html,body{overflow-x:clip}
+input[type=number]{min-width:0}
+.hint{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:6px}
+.hint-actions{display:flex;flex-wrap:wrap;gap:8px}
+#btn-restore{margin-left:0;white-space:nowrap}
+.grid.g2{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+.grid.g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.kpirow{grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr))}
+.charts,.plan-cards{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+.seg{height:100%;display:inline-block;vertical-align:top;overflow:hidden;min-width:2px}
+.seglbl{display:block;color:#fff;font-size:9.5px;font-weight:700;line-height:18px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%;padding:0 3px}
+.cseg-row .bar-track{height:18px;flex:1;min-width:0}
+.tbl-contrib{display:block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+.tbl-contrib td,.tbl-contrib th{white-space:nowrap}
+table{min-width:0}
+@media(max-width:640px){
+  .wrap{padding:0 16px}
+  .calc-in,.calc-out{padding:16px}
+  .bigkpi-panel{flex-direction:column;align-items:stretch;gap:14px}
+  .bigkpi[style*="text-align:right"]{text-align:left}
+  .stwo{grid-template-columns:1fr;gap:10px}
+  .mrow{grid-template-columns:1fr;gap:8px}
+  .kpirow{grid-template-columns:repeat(2,1fr)}
+  .kpirow .card:last-child{grid-column:1/-1}
+  .cseg-row{flex-direction:column;align-items:stretch;gap:6px}
+  .cseg-label{width:100%;flex:none}
+  .bar-row{grid-template-columns:84px 1fr 54px;gap:8px}
+  .preset-row{gap:6px}
+  .preset-btn{flex:1 0 auto;text-align:center}
+  .scope-lbl{flex-basis:100%}
+  .section-title{align-items:flex-start}
+  .flow{gap:6px}
+}
+@media(max-width:400px){
+  .wrap{padding:0 12px}
+  .calc-in,.calc-out{padding:14px}
+  .kpirow{grid-template-columns:1fr}
+  .chancards{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:1fr 1fr;grid-template-areas:"l v" "t t";gap:4px}
+  .bar-row span{grid-area:l}
+  .bar-track{grid-area:t}
+  .bar-val{grid-area:v;text-align:right}
+  .bigkpi .v{font-size:clamp(30px,9vw,40px)}
+  .chancard .cd{font-size:10.5px}
+}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
 </style>
 </head>
@@ -255,8 +303,9 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
               <input type="range" id="rg-ses-o" min="0" max="12000" step="10" value="3750">
             </div>
           </div>
-          <div class="hint">Total del escenario: <span id="hint-ses">—</span> · mix <span id="hint-mix">—</span>
-            <button class="ghost" id="btn-restore" type="button">Restaurar mix jun–ago 26</button>
+          <div class="hint">
+            <div>Total del escenario: <span id="hint-ses">—</span> · mix <span id="hint-mix">—</span></div>
+            <div class="hint-actions"><button class="ghost" id="btn-restore" type="button">Restaurar mix jun–ago 26</button></div>
           </div>
         </div>
 
