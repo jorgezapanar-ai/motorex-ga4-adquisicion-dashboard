@@ -117,6 +117,21 @@ section{padding:34px 0;border-top:1px solid var(--line)}
 .delta.pos{color:var(--green);background:var(--green-bg)}
 .delta.neg{color:var(--red);background:var(--red-bg)}
 .seg{height:100%;display:inline-block}
+.scope-lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px;align-self:center}
+.stwo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stwo input[type=range]{width:100%;accent-color:var(--blue-dark);margin-top:6px}
+#btn-restore{border:1px dashed var(--blue);background:#fff;color:var(--blue-dark);font:600 11px Montserrat,sans-serif;padding:6px 10px;border-radius:8px;cursor:pointer;margin-left:4px;vertical-align:middle}
+#btn-restore:hover{background:#eaf1f8}
+.cseg-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;width:150px;flex:none}
+.cseg{display:grid;gap:10px;margin-bottom:6px}
+.cseg-row{display:flex;align-items:center;gap:12px}
+.cseg-row .bar-track{flex:1;height:20px}
+.seglbl{display:block;color:#fff;font-size:10px;font-weight:700;line-height:20px;text-align:center;white-space:nowrap}
+.tbl-contrib td,.tbl-contrib th{white-space:nowrap}
+.tbl-contrib .sh{font-size:11px;color:var(--muted);font-weight:600}
+.tbl-contrib tr.inc td{background:var(--panel);font-weight:700}
+.tbl-contrib tr.sim td{color:#8b4d8f;font-weight:600}
+.tbl-contrib tr.sim td:first-child{color:var(--muted)}
 /* tables */
 .tbl-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -227,21 +242,40 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
         </div>
 
         <div class="ctrl">
-          <label for="in-ses">Sesiones objetivo</label>
-          <input type="number" id="in-ses" min="1000" step="100" value="5800">
-          <input type="range" id="rg-ses" min="1000" max="12000" step="100" value="5800">
-          <div class="hint">Base del escenario: <span id="hint-ses">—</span></div>
+          <label>Sesiones por canal (objetivo)</label>
+          <div class="stwo">
+            <div>
+              <label for="in-ses-d" style="font-size:11px">Sesiones Direct</label>
+              <input type="number" id="in-ses-d" min="0" step="10" value="2051">
+              <input type="range" id="rg-ses-d" min="0" max="12000" step="10" value="2051">
+            </div>
+            <div>
+              <label for="in-ses-o" style="font-size:11px">Sesiones Organic Search</label>
+              <input type="number" id="in-ses-o" min="0" step="10" value="3750">
+              <input type="range" id="rg-ses-o" min="0" max="12000" step="10" value="3750">
+            </div>
+          </div>
+          <div class="hint">Total del escenario: <span id="hint-ses">—</span> · mix <span id="hint-mix">—</span>
+            <button class="ghost" id="btn-restore" type="button">Restaurar mix jun–ago 26</button>
+          </div>
         </div>
 
         <div class="ctrl">
-          <label>Preset de eficiencia (multiplica el %CR)</label>
+          <label>Variar %CR</label>
           <div class="preset-row" id="presets">
             <button class="preset-btn" data-preset="0" aria-pressed="false">Continuidad</button>
             <button class="preset-btn" data-preset="25" aria-pressed="true">+25%</button>
             <button class="preset-btn" data-preset="50" aria-pressed="false">+50%</button>
             <button class="preset-btn" data-preset="null" aria-pressed="false">Manual <span class="chip-manual" id="chip-manual">Manual</span></button>
           </div>
-          <div class="hint"><span class="pill warn">Supuesto</span> +25%/+50% elevan la conversión proxy (%CR) a proporción igual por canal. No es benchmark externo.</div>
+          <div class="preset-row" id="scopes" style="margin-top:8px">
+            <span class="scope-lbl">¿En qué canales?</span>
+            <button class="preset-btn" data-scope="both" aria-pressed="true">Ambos</button>
+            <button class="preset-btn" data-scope="direct" aria-pressed="false">Solo Direct</button>
+            <button class="preset-btn" data-scope="organic" aria-pressed="false">Solo Organic</button>
+          </div>
+          <div class="hint" id="hint-scope">Cambia un canal a la vez para cuantificar los clics adicionales atribuibles a +%CR de ese canal.</div>
+          <div class="hint"><span class="pill warn">Supuesto</span> El %CR es la conversión proxy («Eventos clave» ÷ sesiones). +25%/+50% la elevan a proporción igual por canal; no es benchmark externo.</div>
           <div class="manualbox" id="manualbox" hidden>
             <b style="font-size:12px">%CR por canal (manual)</b>
             <div class="mrow">
@@ -292,6 +326,23 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
           <div class="chancards">
             <div class="chancard" id="ch-dir"></div>
             <div class="chancard" id="ch-org"></div>
+          </div>
+
+          <div class="card" id="contrib-card" style="margin-top:12px">
+            <h3 style="font-size:15px;margin:0 0 12px">Aporte por canal <span style="color:var(--muted);font-weight:500">· Sesiones · Clics WA · %CR</span></h3>
+            <div class="cseg">
+              <div class="cseg-row"><span class="cseg-label">Sesiones</span>
+                <div class="bar-track"><div class="seg" id="seg-ses-d"></div><div class="seg" id="seg-ses-o"></div></div>
+              </div>
+              <div class="cseg-row"><span class="cseg-label">Clics WhatsApp</span>
+                <div class="bar-track"><div class="seg" id="seg-clk-d"></div><div class="seg" id="seg-clk-o"></div></div>
+              </div>
+            </div>
+            <table class="tbl-contrib">
+              <thead><tr><th>Métrica</th><th>Direct</th><th>Organic Search</th><th>Total</th></tr></thead>
+              <tbody id="tbl-contrib"></tbody>
+            </table>
+            <div id="inc-block" style="margin-top:12px;font-size:13px;line-height:1.7"></div>
           </div>
 
           <div class="flow" id="flow"></div>
@@ -482,7 +533,8 @@ const MAX_CR_T=Math.max(...M.map(m=>m.crT));
 const maxClkRow=M.reduce((a,b)=>a.clkT>b.clkT?a:b);
 
 /* ---------- state ---------- */
-const st={preset:'25',manual:false,sessions:REF_SES_MES,crD:CR_D*100,crO:CR_O*100};
+const st={preset:'25',manual:false,scope:'both',crD:CR_D*100,crO:CR_O*100};
+const sgnA=n=>(n>=0?'+':'−')+nf.format(Math.round(Math.abs(n)));
 function markManual(){ st.manual=true; $('#chip-manual').classList.add('show'); $('#manualbox').hidden=false;
   document.querySelectorAll('#presets .preset-btn').forEach(b=>{ if(b.dataset.preset!=='null')b.setAttribute('aria-pressed','false'); });
   $('#presets .preset-btn[data-preset="null"]').setAttribute('aria-pressed','true');
@@ -498,54 +550,98 @@ function effectiveCrs(){
     return {d:(+$('#in-cr-d').value||0)/100, o:(+$('#in-cr-o').value||0)/100};
   }
   const f=st.preset==='25'?1.25:(st.preset==='50'?1.5:1);
-  return {d:CR_D*f, o:CR_O*f};
+  const applyD=st.scope!=='organic', applyO=st.scope!=='direct';
+  return {d:CR_D*(applyD?f:1), o:CR_O*(applyO?f:1)};
 }
 function compute(){
-  const ses=+$('#in-ses').value||0;
+  const sesD=+$('#in-ses-d').value||0, sesO=+$('#in-ses-o').value||0;
+  const ses=sesD+sesO;
   const {d,o}=effectiveCrs();
   const l2l=(+$('#in-l2l').value||0)/100, l2v=(+$('#in-l2v').value||0)/100;
-  const sesD=ses*SHARE_D, sesO=ses*SHARE_O;
   const clkD=sesD*d, clkO=sesO*o, clkT=clkD+clkO;
+  const clkBD=sesD*CR_D, clkBO=sesO*CR_O, clkBT=clkBD+clkBO;
+  const incD=clkD-clkBD, incO=clkO-clkBO, incT=incD+incO;
   const lvD=clkD*l2l, lvO=clkO*l2l, lvT=lvD+lvO;
   const saD=lvD*l2v, saO=lvO*l2v, saT=saD+saO;
   const crEff=ses>0?clkT/ses:0;
   const lvEff=ses>0?lvT/ses:0;
   const saEff=ses>0?saT/ses:0;
+  const shD=ses>0?sesD/ses:0, shO=ses>0?sesO/ses:0;
+  const shClkD=clkT>0?clkD/clkT:0, shClkO=clkT>0?clkO/clkT:0;
   const delta=clkT-REF_CLK_MES;
-  return {ses,sesD,sesO,clkD,clkO,clkT,l2l,l2v,lvD,lvO,lvT,saD,saO,saT,crD:d,crO:o,crEff,lvEff,saEff,delta};
+  return {ses,sesD,sesO,clkD,clkO,clkT,clkBD,clkBO,clkBT,incD,incO,incT,shD,shO,shClkD,shClkO,l2l,l2v,lvD,lvO,lvT,saD,saO,saT,crD:d,crO:o,crEff,lvEff,saEff,delta};
 }
 
 /* ---------- render ---------- */
+function renderContrib(c){
+  const sgn=n=>(n>=0?'+':'−')+nf.format(Math.round(Math.abs(n)));
+  const seg=(dirEl,orgEl,dirSh,orgSh,dirLabel,orgLabel)=>{
+    const d=document.getElementById(dirEl), o=document.getElementById(orgEl);
+    if(!d||!o)return;
+    d.style.width=dirSh+'%'; d.style.background='var(--blue-dark)'; d.style.position='relative';
+    o.style.width=orgSh+'%'; o.style.background='var(--violet)';
+    d.innerHTML=dirSh>10?'<span class="seglbl">'+dirLabel+'</span>':'';
+    o.innerHTML=orgSh>10?'<span class="seglbl">'+orgLabel+'</span>':'';
+  };
+  if(!$('#seg-ses-d'))return;
+  seg('seg-ses-d','seg-ses-o',c.shD*100,c.shO*100,'Direct '+Math.round(c.shD*100)+'%','Organic '+Math.round(c.shO*100)+'%');
+  seg('seg-clk-d','seg-clk-o',c.shClkD*100,c.shClkO*100,'Direct '+Math.round(c.shClkD*100)+'%','Organic '+Math.round(c.shClkO*100)+'%');
+  const sh=s=>'<span class="sh">'+Math.round(s*100)+'% share</span>';
+  const scopeTxt=st.scope==='direct'?'solo Direct':(st.scope==='organic'?'solo Organic':'ambos canales');
+  $('#tbl-contrib').innerHTML=
+    '<tr><td>Sesiones</td><td>'+nf.format(Math.round(c.sesD))+' '+sh(c.shD)+'</td><td>'+nf.format(Math.round(c.sesO))+' '+sh(c.shO)+'</td><td>'+nf.format(Math.round(c.ses))+'</td></tr>'+
+    '<tr><td>Clics WhatsApp</td><td>'+nf.format(Math.round(c.clkD))+' '+sh(c.shClkD)+'</td><td>'+nf.format(Math.round(c.clkO))+' '+sh(c.shClkO)+'</td><td>'+nf.format(Math.round(c.clkT))+'</td></tr>'+
+    '<tr><td>%CR aplicado (base →)</td><td>'+pct(c.crD)+' <span class="sh">('+pct(CR_D)+' base)</span></td><td>'+pct(c.crO)+' <span class="sh">('+pct(CR_O)+' base)</span></td><td>'+pct(c.crEff)+' efectiva</td></tr>'+
+    '<tr class="inc"><td>Clics adicionales vs continuidad</td><td>'+sgn(c.incD)+'</td><td>'+sgn(c.incO)+'</td><td>'+sgn(c.incT)+'</td></tr>'+
+    '<tr class="sim"><td>Leads efectivos (SIM)</td><td>'+nf.format(Math.round(c.lvD))+'</td><td>'+nf.format(Math.round(c.lvO))+'</td><td>'+nf.format(Math.round(c.lvT))+'</td></tr>'+
+    '<tr class="sim"><td>Ventas (SIM)</td><td>'+nf.format(Math.round(c.saD))+'</td><td>'+nf.format(Math.round(c.saO))+'</td><td>'+nf.format(Math.round(c.saT))+'</td></tr>';
+  let incTxt;
+  if(st.preset!=='0'||st.manual){
+    incTxt='Variación de %CR aplicada a <b>'+scopeTxt+'</b>. Clics adicionales atribuibles: <b>Direct '+sgn(c.incD)+'</b> · <b>Organic '+sgn(c.incO)+'</b> · total <b>'+sgn(c.incT)+'</b>, frente a mantener el %CR de continuidad con las mismas sesiones.';
+  }else{
+    incTxt='Continuidad: %CR sin variar en ningún canal. La línea «Clics adicionales» mide 0; activa +25%/+50% o Manual y usa «Ambos / Solo Direct / Solo Organic» para aislar el aporte de un canal.';
+  }
+  $('#inc-block').innerHTML='<span style="color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px">Interpretación</span>'+incTxt;
+}
 function renderRes(){
   const month=$('#sel-month').value;
   const c=compute();
   $('#r-month').textContent=fmtMonth(month);
   $('#k-clk').textContent=nf.format(Math.round(c.clkT));
   $('#k-cr').textContent=pct(c.crEff);
-  $('#k-cr-note').textContent='mediana Direct '+pct(CR_D)+' · Organic '+pct(CR_O);
+  $('#k-cr-note').textContent='Direct '+pct(c.crD)+' · Organic '+pct(c.crO);
   $('#k-ses').textContent=nf.format(Math.round(c.ses));
+  $('#hint-ses').textContent=nf.format(Math.round(c.ses))+' sesiones';
+  $('#hint-mix').textContent=Math.round(c.shD*100)+'% Direct · '+Math.round(c.shO*100)+'% Organic (jun–ago 26 ref: '+Math.round(SHARE_D*100)+'%/'+Math.round(SHARE_O*100)+'%)';
   const cls=c.delta>=0?'pos':'neg';
   $('#k-delta').innerHTML='<span class="delta '+cls+'">'+(c.delta>=0?'+':'')+nf.format(Math.round(c.delta))+'</span>';
   $('#k-delta-note').textContent='vs '+nf.format(Math.round(REF_CLK_MES))+' clics/mes ref. jun–ago 26';
-  $('#k-mix').textContent=pct(SHARE_D)+' Direct · '+pct(SHARE_O)+' Organic';
+  $('#k-mix').textContent='Ses D/O '+Math.round(c.shD*100)+'%/'+Math.round(c.shO*100)+'% · clic D/O '+Math.round(c.shClkD*100)+'%/'+Math.round(c.shClkO*100)+'%';
   $('#k-leads').textContent=nf.format(Math.round(c.lvT));
   $('#k-l2l-note').textContent='clics × '+pct(c.l2l,0)+' → '+nf.format(Math.round(c.lvT))+' leads';
   $('#k-sales').textContent=nf.format(Math.round(c.saT));
   $('#k-l2v-note').textContent='leads × '+pct(c.l2v,0)+' → '+nf.format(Math.round(c.saT))+' ventas';
   $('#k-funnel').textContent=pct(c.saEff);
-  $('#ch-dir').innerHTML='<div class="ch">Direct</div><div class="cv">'+nf.format(Math.round(c.clkD))+'</div><div class="cd">'+nf.format(Math.round(c.sesD))+' sesiones · %CR '+pct(c.crD)+'</div><div class="cd sim">→ '+nf.format(Math.round(c.lvD))+' leads · '+nf.format(Math.round(c.saD))+' ventas (SIM)</div>';
-  $('#ch-org').innerHTML='<div class="ch">Organic Search</div><div class="cv">'+nf.format(Math.round(c.clkO))+'</div><div class="cd">'+nf.format(Math.round(c.sesO))+' sesiones · %CR '+pct(c.crO)+'</div><div class="cd sim">→ '+nf.format(Math.round(c.lvO))+' leads · '+nf.format(Math.round(c.saO))+' ventas (SIM)</div>';
+  const incChip=n=>(Math.abs(n)>=0.5?('<div class="cd"><span class="delta '+(n>=0?'pos':'neg')+'">cl. '+(n>=0?'extra +':'−')+nf.format(Math.round(Math.abs(n)))+'</span></div>'):'');
+  $('#ch-dir').innerHTML='<div class="ch">Direct</div><div class="cv">'+nf.format(Math.round(c.clkD))+'</div><div class="cd">'+nf.format(Math.round(c.sesD))+' sesiones ('+pct(c.shD,0)+' ses) · %CR '+pct(c.crD)+'</div>'+(st.manual||st.preset!=='0'?'<div class="cd">share clics '+pct(c.shClkD,0)+'</div>':'')+incChip(c.incD)+'<div class="cd sim">→ '+nf.format(Math.round(c.lvD))+' leads · '+nf.format(Math.round(c.saD))+' ventas (SIM)</div>';
+  $('#ch-org').innerHTML='<div class="ch">Organic Search</div><div class="cv">'+nf.format(Math.round(c.clkO))+'</div><div class="cd">'+nf.format(Math.round(c.sesO))+' sesiones ('+pct(c.shO,0)+' ses) · %CR '+pct(c.crO)+'</div>'+(st.manual||st.preset!=='0'?'<div class="cd">share clics '+pct(c.shClkO,0)+'</div>':'')+incChip(c.incO)+'<div class="cd sim">→ '+nf.format(Math.round(c.lvO))+' leads · '+nf.format(Math.round(c.saO))+' ventas (SIM)</div>';
   const f=st.manual?1:(st.preset==='25'?1.25:(st.preset==='50'?1.5:1));
+  const scopeTxt=st.scope==='direct'?'solo Direct':(st.scope==='organic'?'solo Organic':'ambos');
   $('#flow').innerHTML=
-    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> ses. × '+pct(SHARE_D)+'</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.sesD))+'</b> Direct × <b>'+pct(c.crD)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkD))+'</b> clics</span><span class="op">·</span>'+
+    '<span class="chip"><b>'+nf.format(Math.round(c.sesD))+'</b> Direct × <b>'+pct(c.crD)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkD))+'</b> clics</span><span class="op">+</span>'+
     '<span class="chip"><b>'+nf.format(Math.round(c.sesO))+'</b> Organic × <b>'+pct(c.crO)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkO))+'</b> clics</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkT))+'</b> clics WA total</span>'+
     '<span class="op">→</span><span class="chip sim-chip"><b>'+nf.format(Math.round(c.lvT))+'</b> leads × '+pct(c.l2v,0)+'</span><span class="op">→</span><span class="chip sim-chip"><b>'+nf.format(Math.round(c.saT))+'</b> ventas (SIM)</span>'+
-    (f!==1?'<span class="op">·</span><span class="chip">factor preset ×'+f+'</span>':'');
-  let txt='Al escenario corresponden '+nf.format(Math.round(c.clkT))+' clics a WhatsApp (conversión proxy '+pct(c.crEff)+'), frente a un promedio de referencia de '+nf.format(Math.round(REF_CLK_MES))+' clics/mes en jun–ago 26. Con la etapa comercial simulada (= '+pct(c.l2l,0)+' clic→lead y '+pct(c.l2v,0)+' lead→venta), el escenario produce '+nf.format(Math.round(c.lvT))+' leads efectivos y '+nf.format(Math.round(c.saT))+' ventas (volumen simulado, no observado).';
+    (f!==1?'<span class="op">·</span><span class="chip">factor ×'+f+' en '+scopeTxt+'</span>':'');
+  let txt='Al escenario corresponden '+nf.format(Math.round(c.clkT))+' clics a WhatsApp (conversión proxy '+pct(c.crEff)+'), frente a un promedio de referencia de '+nf.format(Math.round(REF_CLK_MES))+' clics/mes en jun–ago 26. Por canal, Direct aporta '+nf.format(Math.round(c.clkD))+' clics ('+pct(c.shClkD,0)+') sobre '+nf.format(Math.round(c.sesD))+' sesiones, y Organic Search '+nf.format(Math.round(c.clkO))+' ('+pct(c.shClkO,0)+') sobre '+nf.format(Math.round(c.sesO))+'.';
+  if(st.manual||st.preset!=='0'){
+    txt+=' La variación de %CR sobre '+scopeTxt+' entrega '+sgnA(c.incT)+' clics adicionales frente a continuidad (Direct '+sgnA(c.incD)+', Organic '+sgnA(c.incO)+'), atribuibles al canal o canales intervenidos.';
+  }
+  txt+=' Con la etapa comercial simulada (= '+pct(c.l2l,0)+' clic→lead y '+pct(c.l2v,0)+' lead→venta), el escenario produce '+nf.format(Math.round(c.lvT))+' leads efectivos y '+nf.format(Math.round(c.saT))+' ventas (volumen simulado, no observado).';
   if(c.clkT>maxClkRow.clkT){ txt+=' Supera el máximo mensual observado ('+nf.format(maxClkRow.clkT)+' clics en '+fmtMonth(maxClkRow.period)+'). Ajusta sesiones o %CR si buscas conservadurismo.'; }
   else if(c.clkT<REF_CLK_MES){ txt+=' Está por debajo del promedio de referencia: escenario de contracción.'; }
   else { txt+=' Se mantiene en el rango de la observación reciente (escenario de continuidad).'; }
   $('#decision').innerHTML='<h3>Contraste contra la observación</h3><p>'+txt+'</p>';
+  renderContrib(c);
   renderCharts();
   renderPlan();
 }
@@ -600,6 +696,7 @@ function renderPlan(){
     return '<div class="card kpi"><div class="label">'+fmtMonth(per)+'</div>'+
       '<div class="v" style="font-size:30px">'+nf.format(Math.round(c.clkT))+'</div>'+
       '<div class="note">clics WA · '+nf.format(Math.round(c.ses))+' sesiones · %CR '+pct(c.crEff)+'</div>'+
+      '<div class="note">Direct '+nf.format(Math.round(c.clkD))+' · Organic '+nf.format(Math.round(c.clkO))+'</div>'+
       '<div class="note sim">'+nf.format(Math.round(c.lvT))+' leads · '+nf.format(Math.round(c.saT))+' ventas (SIM)</div>'+
       '<div style="margin-top:10px"><span class="pill '+cls+'">'+dir+' vs ref </span></div></div>';
   }).join('');
@@ -751,20 +848,28 @@ function dl(blob,name){const a=document.createElement('a');a.href=URL.createObje
 function downloadXlsx(){
   const c=compute(); const month=$('#sel-month').value;
   const c1=[['Simulador Motorex GA4 · DATA DASH',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir sin aprobación humana'],['Extracción','2026-09-15'],['%Clic WA → Lead efectivo (SIMULADO)',+c.l2l.toFixed(4)],['%Lead → Venta (SIMULADO)',+c.l2v.toFixed(4)],['Aviso etapa comercial','Sin dato observado en la fuente GA4: clic→lead y lead→venta son supuestos de escenario, no métricas reales']];
-  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Share Direct (jun-ago 26)',+SHARE_D.toFixed(4)],['Share Organic (jun-ago 26)',+SHARE_O.toFixed(4)],['%CR Direct aplicado',+c.crD.toFixed(4)],['%CR Organic aplicado',+c.crO.toFixed(4)],['Clics WA Direct',Math.round(c.clkD)],['Clics WA Organic',Math.round(c.clkO)],['Clics WA totales',Math.round(c.clkT)],['%CR efectiva',+c.crEff.toFixed(4)],['Referencia clics/mes (jun-ago 26)',Math.round(REF_CLK_MES)],['%Clic→Lead (SIM)',+c.l2l.toFixed(4)],['%Lead→Venta (SIM)',+c.l2v.toFixed(4)],['Leads efectivos Direct (SIM)',Math.round(c.lvD)],['Leads efectivos Organic (SIM)',Math.round(c.lvO)],['Leads efectivos totales (SIM)',Math.round(c.lvT)],['Ventas Direct (SIM)',Math.round(c.saD)],['Ventas Organic (SIM)',Math.round(c.saO)],['Ventas totales (SIM)',Math.round(c.saT)],['%Ventas ÷ sesiones (SIM)',+c.saEff.toFixed(4)]];
+  const res=[['Parámetro','Valor'],['Sesiones Direct objetivo',Math.round(c.sesD)],['Sesiones Organic objetivo',Math.round(c.sesO)],['Sesiones totales',Math.round(c.ses)],['Share sesiones Direct/Organic',+c.shD.toFixed(4)+' / '+c.shO.toFixed(4)],['%CR Direct aplicado (base '+CR_D.toFixed(4)+')',+c.crD.toFixed(4)],['%CR Organic aplicado (base '+CR_O.toFixed(4)+')',+c.crO.toFixed(4)],['Alcance de la variación de %CR',st.scope],['Clics WA Direct',Math.round(c.clkD)],['Clics WA Organic',Math.round(c.clkO)],['Share clics Direct/Organic',+c.shClkD.toFixed(4)+' / '+c.shClkO.toFixed(4)],['Clics adicionales vs continuidad (Direct)',Math.round(c.incD)],['Clics adicionales vs continuidad (Organic)',Math.round(c.incO)],['Clics adicionales vs continuidad (Total)',Math.round(c.incT)],['Clics WA totales',Math.round(c.clkT)],['%CR efectiva',+c.crEff.toFixed(4)],['Referencia clics/mes (jun-ago 26)',Math.round(REF_CLK_MES)],['%Clic→Lead (SIM)',+c.l2l.toFixed(4)],['%Lead→Venta (SIM)',+c.l2v.toFixed(4)],['Leads efectivos Direct (SIM)',Math.round(c.lvD)],['Leads efectivos Organic (SIM)',Math.round(c.lvO)],['Leads efectivos totales (SIM)',Math.round(c.lvT)],['Ventas Direct (SIM)',Math.round(c.saD)],['Ventas Organic (SIM)',Math.round(c.saO)],['Ventas totales (SIM)',Math.round(c.saT)],['%Ventas ÷ sesiones (SIM)',+c.saEff.toFixed(4)]];
   const hist=[['Mes','Ses Direct','Ses Organic','Ses Total','Cl WA Direct','Cl WA Organic','Cl WA Total','%CR Direct','%CR Organic','%CR Total']].concat(M.map(m=>[fmtMonth(m.period),m.sesD,m.sesO,m.sesT,m.clkD,m.clkO,m.clkT,+m.crD.toFixed(4),+m.crO.toFixed(4),+m.crT.toFixed(4)]));
-  const plan=[['Mes','Sesiones','Clics WA proyectados','Leads (SIM)','Ventas (SIM)','%CR efectiva','%Ventas÷sesiones (SIM)']].concat(['sep-26','oct-26','nov-26','dic-26'].map(per=>[fmtMonth(per),Math.round(c.ses),Math.round(c.clkT),Math.round(c.lvT),Math.round(c.saT),+c.crEff.toFixed(4),+c.saEff.toFixed(4)]));
+  const plan=[['Mes','Ses Direct','Ses Organic','Ses Total','Cl. WA Direct','Cl. WA Organic','Cl. WA Total','Leads (SIM)','Ventas (SIM)','%CR efectiva','%Ventas÷sesiones (SIM)']].concat(['sep-26','oct-26','nov-26','dic-26'].map(per=>[fmtMonth(per),Math.round(c.sesD),Math.round(c.sesO),Math.round(c.ses),Math.round(c.clkD),Math.round(c.clkO),Math.round(c.clkT),Math.round(c.lvT),Math.round(c.saT),+c.crEff.toFixed(4),+c.saEff.toFixed(4)]));
+  const aport=[['Métrica','Direct','Organic Search','Total'],['Sesiones',Math.round(c.sesD),Math.round(c.sesO),Math.round(c.ses)],['Share sesiones',+c.shD.toFixed(4),+c.shO.toFixed(4),1],['Clics WA',Math.round(c.clkD),Math.round(c.clkO),Math.round(c.clkT)],['Share clics',+c.shClkD.toFixed(4),+c.shClkO.toFixed(4),1],['%CR base',+CR_D.toFixed(4),+CR_O.toFixed(4),+c.crEff.toFixed(4)],['%CR aplicado',+c.crD.toFixed(4),+c.crO.toFixed(4),+c.crEff.toFixed(4)],['Clics adicionales vs continuidad',Math.round(c.incD),Math.round(c.incO),Math.round(c.incT)],['Leads efectivos (SIM)',Math.round(c.lvD),Math.round(c.lvO),Math.round(c.lvT)],['Ventas (SIM)',Math.round(c.saD),Math.round(c.saO),Math.round(c.saT)]];
   const ch=[['Canal','Sesiones ref (jun-ago 26)','Clics ref','%CR ref'],['Direct',refSesD,refClkD,+CR_D.toFixed(4)],['Organic Search',refSesO,refClkO,+CR_O.toFixed(4)],['Total',refSesT,refClkT,+c.crEff.toFixed(4)]];
   const eqv=[['Mes','Ses DATA DASH','Ses Canal (Dir+Org)','Δ ses','Cl WA DASH','Ev. clave Canal','Δ clk','Ses Tendencia','Cobertura DASH']].concat(M.map(m=>{const t=EQ_TR.get(m.period);return[fmtMonth(m.period),m.sesT,+(m.sesD+m.sesO),+(m.sesT-(m.sesD+m.sesO)),m.clkT,+(m.clkD+m.clkO),+(m.clkT-(m.clkD+m.clkO)),(t?t.ses:''),+(m.sesT/(t?t.ses:1)).toFixed(4)]})).concat([['Total 20m',EQ_TOT.sesD+EQ_TOT.sesO,EQ_TOT.sesD+EQ_TOT.sesO,0,EQ_TOT.clkD+EQ_TOT.clkO,EQ_TOT.clkD+EQ_TOT.clkO,0,0,0]]);
   const emb=[['Etapa','Direct','Organic','Total'],['Sesiones',Math.round(c.sesD),Math.round(c.sesO),Math.round(c.ses)],['Clics WA',Math.round(c.clkD),Math.round(c.clkO),Math.round(c.clkT)],['Leads efectivos (SIM)',Math.round(c.lvD),Math.round(c.lvO),Math.round(c.lvT)],['Ventas (SIM)',Math.round(c.saD),Math.round(c.saO),Math.round(c.saT)],['%Sesión→Clic',+c.crD.toFixed(4),+c.crO.toFixed(4),+c.crEff.toFixed(4)],['%Clic→Lead (SIM)',c.l2l,c.l2l,c.l2l],['%Lead→Venta (SIM)',c.l2v,c.l2v,c.l2v],['%Sesión→Venta (SIM)',+((c.saD/(c.sesD||1)).toFixed(4)),+((c.saO/(c.sesO||1)).toFixed(4)),+c.saEff.toFixed(4)]];
-  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'DATA DASH',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch},{name:'Equivalencias',rows:eqv},{name:'Embudo (SIM)',rows:emb}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'DATA DASH',rows:hist},{name:'Plan',rows:plan},{name:'Aporte por canal',rows:aport},{name:'Canales referencia',rows:ch},{name:'Equivalencias',rows:eqv},{name:'Embudo (SIM)',rows:emb}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   dl(blob,'motorex_data_dash_'+month+'.xlsx');
 }
 
 /* ---------- init ---------- */
 function bind(){
-  $('#in-ses').addEventListener('input',()=>renderAll());
-  $('#rg-ses').addEventListener('input',e=>{$('#in-ses').value=e.target.value;renderAll();});
+  $('#in-ses-d').addEventListener('input',()=>renderAll());
+  $('#rg-ses-d').addEventListener('input',e=>{$('#in-ses-d').value=e.target.value;renderAll();});
+  $('#in-ses-o').addEventListener('input',()=>renderAll());
+  $('#rg-ses-o').addEventListener('input',e=>{$('#in-ses-o').value=e.target.value;renderAll();});
+  $('#btn-restore').addEventListener('click',()=>{
+    $('#in-ses-d').value=Math.round(refSesD/3); $('#rg-ses-d').value=Math.round(refSesD/3);
+    $('#in-ses-o').value=Math.round(refSesO/3); $('#rg-ses-o').value=Math.round(refSesO/3);
+    renderAll();
+  });
   $('#in-cr-d').addEventListener('input',()=>{renderAll();});
   $('#in-cr-o').addEventListener('input',()=>{renderAll();});
   $('#in-l2l').addEventListener('input',()=>renderAll());
@@ -775,9 +880,17 @@ function bind(){
     if(b.dataset.preset==='null'){ markManual(); renderAll(); return; }
     setPreset(b.dataset.preset); renderAll();
   });
+  $('#scopes').addEventListener('click',e=>{
+    const b=e.target.closest('.preset-btn'); if(!b)return;
+    st.scope=b.dataset.scope;
+    document.querySelectorAll('#scopes .preset-btn').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+    renderAll();
+  });
   $('#btn-reset').addEventListener('click',()=>{
-    st.manual=false; setPreset('25'); st.sessions=REF_SES_MES;
-    $('#in-ses').value=Math.round(REF_SES_MES); $('#rg-ses').value=Math.round(REF_SES_MES);
+    st.manual=false; setPreset('25'); st.scope='both';
+    document.querySelectorAll('#scopes .preset-btn').forEach(x=>x.setAttribute('aria-pressed',x.dataset.scope==='both'?'true':'false'));
+    $('#in-ses-d').value=Math.round(refSesD/3); $('#rg-ses-d').value=Math.round(refSesD/3);
+    $('#in-ses-o').value=Math.round(refSesO/3); $('#rg-ses-o').value=Math.round(refSesO/3);
     $('#in-cr-d').value=(CR_D*100).toFixed(1); $('#in-cr-o').value=(CR_O*100).toFixed(1);
     renderAll();
   });
@@ -785,10 +898,10 @@ function bind(){
 }
 function renderAll(){ renderRes(); renderHist(); renderStruct(); renderDiag(); renderEquiv(); }
 function setDefaults(){
-  st.sessions=REF_SES_MES;
-  $('#in-ses').value=Math.round(REF_SES_MES); $('#rg-ses').value=Math.round(REF_SES_MES);
+  $('#in-ses-d').value=Math.round(refSesD/3); $('#rg-ses-d').value=Math.round(refSesD/3);
+  $('#in-ses-o').value=Math.round(refSesO/3); $('#rg-ses-o').value=Math.round(refSesO/3);
   $('#in-cr-d').value=(CR_D*100).toFixed(1); $('#in-cr-o').value=(CR_O*100).toFixed(1);
-  $('#hint-ses').textContent=nf.format(Math.round(REF_SES_MES))+' ses/mes promedio (jun–ago 26)';
+  $('#hint-mix').textContent=Math.round(SHARE_D*100)+'% Direct · '+Math.round(SHARE_O*100)+'% Organic (jun–ago 26)';
   const u=new URLSearchParams(location.search);
   const p=u.get('preset'); if(p==='plus25')setPreset('25'); else if(p==='plus50')setPreset('50'); else if(p==='base')setPreset('0'); else setPreset('25');
   const m=u.get('month'); if(['sep-26','oct-26','nov-26','dic-26'].includes(m))$('#sel-month').value=m;
