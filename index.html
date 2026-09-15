@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MOTOREX | Simulador de adquisición web 2026</title>
+<title>MOTOREX | Simulador WhatsApp · DATA DASH</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -41,16 +41,6 @@ h1,h2,h3{margin:0;letter-spacing:-.03em;line-height:1.12}
 .sitehead .sub{opacity:.92;font-size:14px;margin-top:8px}
 .badge.on-dark{color:#ffe9c9;background:rgba(140,92,40,.28);border-color:rgba(255,233,201,.4)}
 .badge.on-dark::before{background:#ffcf87}
-/* tabs */
-.tabs{display:flex;gap:4px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
-box-shadow:0 2px 10px rgba(16,24,32,.05)}
-.tab-btn{border:0;background:none;font:600 13px Montserrat,sans-serif;letter-spacing:.02em;color:var(--muted);padding:14px 22px;cursor:pointer;position:relative}
-.tab-btn[aria-selected="true"]{color:var(--ink)}
-.tab-btn[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;background:var(--grad);border-radius:3px 3px 0 0}
-.tab-btn:hover{color:var(--blue-dark)}
-.tab-btn:focus-visible{outline:3px solid var(--blue);outline-offset:-3px}
-.tab-panel{display:none}
-.tab-panel[hidden]{display:none}
 /* sections */
 section{padding:34px 0;border-top:1px solid var(--line)}
 .section-title{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:20px}
@@ -69,11 +59,20 @@ section{padding:34px 0;border-top:1px solid var(--line)}
 .kpi .note{font-size:11px;color:var(--blue-dark);margin-top:6px}
 .kpi .label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-/* controls */
+/* ===== calculadora: UN SOLO CUADRO ===== */
+.calc{padding:0;overflow:hidden}
+.calc-head{padding:22px 24px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+.calc-head h2{font-size:clamp(20px,3vw,26px);font-weight:800}
+.calc-head .tools{display:flex;gap:8px;flex-wrap:wrap}
+.calc-grid{display:grid;grid-template-columns:380px 1fr;gap:0}
+.calc-in{padding:22px 24px;border-right:1px solid var(--line);background:var(--panel)}
+.calc-out{padding:22px 24px}
+.ctrl{margin-bottom:18px}
+.ctrl:last-child{margin-bottom:0}
 .ctrl label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.ctrl input[type=number]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:600 16px Montserrat,sans-serif;color:var(--ink);background:#fff}
-.ctrl input[type=number]:focus-visible{outline:3px solid var(--blue);outline-offset:0}
+.ctrl select,.ctrl input[type=number]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:600 15px Montserrat,sans-serif;color:var(--ink);background:#fff}
 .ctrl input[type=range]{width:100%;accent-color:var(--blue-dark);margin-top:10px}
+.ctrl input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:0}
 .ctrl .hint{font-size:11px;color:var(--muted);margin-top:6px}
 .preset-row{display:flex;flex-wrap:wrap;gap:8px}
 .preset-btn{border:1px solid var(--line);background:#fff;color:var(--ink);font:600 12px Montserrat,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}
@@ -81,22 +80,44 @@ section{padding:34px 0;border-top:1px solid var(--line)}
 .preset-btn:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
 .chip-manual{display:none;font-size:11px;font-weight:700;color:#8b4d8f;background:#f3e8f4;padding:4px 10px;border-radius:999px}
 .chip-manual.show{display:inline-block}
+.manualbox{border:1px dashed var(--violet);border-radius:10px;padding:12px;margin-top:10px;background:#fdfcff}
+.manualbox .mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .cta{border:0;cursor:pointer;font:700 13px Montserrat,sans-serif;padding:11px 18px;border-radius:10px;background:var(--grad);color:#fff}
 .cta:hover{filter:brightness(1.05)}
 .cta:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font:600 13px Montserrat,sans-serif;padding:10px 16px;border-radius:10px;cursor:pointer}
 .ghost:hover{border-color:var(--blue-dark);color:var(--blue-dark)}
-/* flow chips */
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
+/* resultado principal */
+.result-main{display:flex;flex-direction:column;gap:14px}
+.bigkpi-panel{background:linear-gradient(110deg,#f0f4fb,#f5f1f9);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+.bigkpi .label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.bigkpi .v{font-size:clamp(34px,6vw,54px);font-weight:800;letter-spacing:-.055em;line-height:1}
+.bigkpi .note{font-size:11px;color:var(--blue-dark);margin-top:6px}
+.kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpirow .card{padding:14px}
+.kpirow .v{font-size:clamp(20px,3vw,28px);font-weight:700;letter-spacing:-.04em;line-height:1.05}
+.chancards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chancard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+.chancard .ch{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-dark)}
+.chancard .cv{font-size:clamp(18px,2.6vw,24px);font-weight:800;margin:4px 0 2px}
+.chancard .cd{font-size:11px;color:var(--muted)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
 .chip{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600}
 .chip b{color:var(--blue-dark)}
 .flow .op{color:var(--pink);font-weight:800}
+.decision{margin-top:14px;padding:14px 16px;border-left:4px solid var(--blue-dark);background:var(--panel);border-radius:0 12px 12px 0}
+.decision h3{margin:0 0 6px;font-size:14px}
+.decision p{margin:0;font-size:13px;color:var(--muted)}
+.delta{padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.delta.pos{color:var(--green);background:var(--green-bg)}
+.delta.neg{color:var(--red);background:var(--red-bg)}
+.seg{height:100%;display:inline-block}
 /* tables */
 .tbl-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-dark);text-align:right;padding:10px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
+th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-dark);text-align:right;padding:9px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
-td{padding:10px 12px;border-bottom:1px solid #eee9f3;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td{padding:9px 10px;border-bottom:1px solid #eee9f3;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody tr:hover{background:#faf8fd}
 tfoot td{font-weight:700;background:var(--panel);border-top:2px solid var(--line)}
 details{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px 20px}
@@ -104,8 +125,9 @@ summary{cursor:pointer;font-weight:700;font-size:14px}
 details p{margin:10px 0;font-size:13px;color:var(--muted)}
 details p b{color:var(--ink)}
 details code{background:var(--panel);border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:12px}
-.bars{margin-top:16px}
-.bar-row{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:12px;margin-bottom:8px}
+/* bars */
+.bars{margin-top:8px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center;font-size:12px;margin-bottom:8px}
 .bar-track{background:var(--panel);border-radius:6px;height:18px;overflow:hidden}
 .bar-fill{height:100%;background:var(--grad);border-radius:6px;min-width:2px}
 .bar-val{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
@@ -127,27 +149,20 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
 .palanca h4{margin:0 0 6px;color:var(--blue-dark);font-size:15px;letter-spacing:-.01em}
 .palanca .kv{font-size:12px;color:var(--muted);margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
 .palanca .kv span{background:var(--panel);border:1px solid var(--line);padding:4px 10px;border-radius:999px;font-weight:600}
-/* estacional */
+/* plan + estacional */
+.plan-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
 .season-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
 .season-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
 .season-card b{display:block;font-size:12px;letter-spacing:.05em}
 .season-card span{font-size:11px;color:var(--muted)}
 .season-card .rate{font-weight:700;color:var(--blue-dark);font-size:12px;margin-top:4px}
-/* decisions */
-.decision{margin-top:16px;padding:16px 18px;border-left:4px solid var(--blue-dark);background:var(--panel);border-radius:0 12px 12px 0}
-.decision h3{margin:0 0 6px;font-size:15px}
-.decision p{margin:0;font-size:13px;color:var(--muted)}
 .footer{color:var(--muted);font-size:12px;padding:30px 0 60px;text-align:center;border-top:1px solid var(--line);margin-top:20px}
 .footer .revi{font-weight:700;color:var(--amber)}
-dialog{border:1px solid var(--line);border-radius:16px;padding:0;max-width:min(900px,92vw);background:var(--card);color:var(--ink)}
-dialog::backdrop{background:rgba(16,24,32,.45)}
-.dialog-in{padding:22px}
-.dialog-close{float:right;border:0;background:var(--panel);font:700 13px Montserrat,sans-serif;padding:8px 12px;border-radius:8px;cursor:pointer}
-noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);font-weight:700;text-align:center}
-@media(max-width:760px){
-  .tab-btn{padding:12px 14px;font-size:12px}
+@media(max-width:860px){
+  .calc-grid{grid-template-columns:1fr}
+  .calc-in{border-right:0;border-bottom:1px solid var(--line)}
   section{padding:26px 0}
-  .bar-row{grid-template-columns:110px 1fr 76px}
+  .bar-row{grid-template-columns:110px 1fr 60px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
 </style>
@@ -159,100 +174,113 @@ noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);fo
   <div class="wrap">
     <div class="row">
       <div>
-        <div class="kicker" style="color:#e6ecff">Motorex.com.pe · GA4 adquisición</div>
-        <h1>Simulador de adquisición web 2026</h1>
-        <div class="sub">ENE–AGO 2026 OBSERVADO · SET–DIC 2026 ESCENARIO CONDICIONADO · SENSIBILIDADES, NO VENTAS</div>
+        <div class="kicker" style="color:#e6ecff">Motorex.com.pe · GA4 · hoja «DATA DASH»</div>
+        <h1>Simulador de clics a WhatsApp</h1>
+        <div class="sub">ENE 2025 – AGO 2026 OBSERVADO · SET–DIC 2026 ESCENARIO CONDICIONADO · CONVERSIÓN PROXY = CLICS WHATSAPP</div>
       </div>
       <span class="badge on-dark">Revisión humana requerida</span>
     </div>
   </div>
 </header>
 
-<nav class="tabs" role="tablist" aria-label="Vistas del simulador">
-  <button class="tab-btn" id="tab-proy" role="tab" aria-selected="true" aria-controls="panel-proy">Proyección</button>
-  <button class="tab-btn" id="tab-can" role="tab" aria-selected="false" aria-controls="panel-can">Canales</button>
-</nav>
-
 <div class="wrap">
 
-<section class="hero" id="panel-proy" role="tabpanel" aria-labelledby="tab-proy">
+<section class="hero">
   <div class="kicker">Lectura ejecutiva</div>
-  <h2>Una palanca de tráfico, dos tasas y un escenario mensual comparable contra la observación.</h2>
-  <p class="lead">El simulador usa el histórico GA4 observado (enero 2025 – agosto 2026) y proyecta <b>setiembre–diciembre 2026</b> a partir de sesiones objetivo, eventos clave por sesión (conversión proxy) e interacción. Los resultados son sensibilidades matemáticas sobre tráfico; <b>no hay ingresos ni inversión observados en el archivo</b>, por lo que no se emite ventas, CAC ni ROAS.</p>
-  <div class="candado">Referencia por defecto: <b>jun–ago 2026</b> (últimos 3 meses completos sin anomalías estructurales). Febrero y marzo 2026 quedan fuera del baseline por ruptura de cardinalidad de rutas; agosto 2026 es el último periodo con dato. La tasa global de eventos clave es 20.6% (104,464 eventos clave / 507,803 sesiones).</div>
-</section>
-
-<section id="proy">
-  <div class="section-title">
-    <div><div class="kicker">Variables</div><h2>Construye el escenario</h2></div>
-    <button class="ghost" id="btn-reset">Restablecer escenario +25%</button>
-  </div>
-
-  <div class="grid g3">
-    <div class="card ctrl">
-      <label for="sel-month">Mes del escenario</label>
-      <select id="sel-month" style="width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:600 15px Montserrat,sans-serif">
-        <option>sep-26</option><option>oct-26</option><option>nov-26</option><option>dic-26</option>
-      </select>
-      <div class="hint">Solo meses futuros; requieren baseline.</div>
-    </div>
-    <div class="card ctrl">
-      <label>Preset de eficiencia</label>
-      <div class="preset-row" id="presets" role="group" aria-label="Preset de eficiencia">
-        <button class="preset-btn" data-preset="0" aria-pressed="false">Continuidad</button>
-        <button class="preset-btn" data-preset="25" aria-pressed="true">+25%</button>
-        <button class="preset-btn" data-preset="50" aria-pressed="false">+50%</button>
-        <button class="preset-btn" data-preset="null" aria-pressed="false">Manual <span class="chip-manual" id="chip-manual">Manual</span></button>
-      </div>
-      <div class="hint"><span class="pill warn">Supuesto</span> +25%/+50% elevan la conversión proxy y reducen el costo por evento clave hipotético a costo por sesión constante. No es benchmark externo.</div>
-    </div>
-    <div class="card ctrl">
-      <label for="in-ses">Sesiones objetivo</label>
-      <input type="number" id="in-ses" min="1000" step="500" value="20000">
-      <input type="range" id="rg-ses" min="5000" max="50000" step="500" value="20000">
-      <div class="hint">Base del escenario: <span id="hint-ses">—</span></div>
-    </div>
-    <div class="card ctrl">
-      <label for="in-tas">Eventos clave por sesión (%) · proxy de conversión</label>
-      <input type="number" id="in-tas" min="1" max="80" step="0.1" value="29.5">
-      <input type="range" id="rg-tas" min="1" max="60" step="0.1" value="29.5">
-      <div class="hint">Base referencia: <span id="hint-tas">—</span> · Máximo mensual observado: <span id="max-tas">—</span>. <b>No es conversión de transacción.</b></div>
-    </div>
-    <div class="card ctrl">
-      <label for="in-int">Sesiones con interacción (%)</label>
-      <input type="number" id="in-int" min="10" max="100" step="0.1" value="65.9">
-      <div class="hint">Base referencia: <span id="hint-int">—</span> · Tasa de interacción (no CTR, no conversión).</div>
-    </div>
-    <div class="card ctrl">
-      <label for="in-inv">Inversión hipotética (S/, opcional)</label>
-      <input type="number" id="in-inv" min="0" step="500" value="0">
-      <div class="hint"><span class="pill warn">Hipotética</span> Sin dato de plataforma en el archivo. Solo informativa para estimar costo por evento clave.</div>
-    </div>
-  </div>
+  <h2>Una calculadora: sesiones → %CR por canal → clics a WhatsApp.</h2>
+  <p class="lead">La pestaña «DATA DASH» reporta sesiones, clics a WhatsApp y su tasa de conversión (%CR) para <b>Direct</b> y <b>Organic Search</b>. El simulador proyecta setiembre–diciembre 2026 distribuyendo las sesiones objetivo según el mix de referencia (jun–ago 26) y aplicando la tasa de conversión por canal. <b>No hay ventas, inversión ni ingresos en esta hoja</b>: el clic a WhatsApp es la conversión observable.</p>
+  <div class="candado">Referencia por defecto: <b>jun–ago 2026</b>. %CR por canal = mediana mensual del periodo (Direct 31.8%, Organic Search 9.2%). Junio 2026 queda fuera de la tasa Direct por inconsistencia (CR &gt; 100%: 1,769 clics sobre 1,764 sesiones) y se marca <span class="pill warn">REVISAR</span>.</div>
 </section>
 
 <section>
   <div class="section-title">
-    <div><div class="kicker">Resultados</div><h2>Proyección de <span id="r-month">set-26</span></h2></div>
-    <button class="cta" id="btn-xlsx">Descargar excel</button>
+    <div><div class="kicker">Calculadora · DATA DASH</div><h2>De sesiones a clics WhatsApp</h2></div>
+    <button class="ghost" id="btn-reset">Restablecer +25%</button>
   </div>
 
-  <div class="grid g4" id="res-kpis" aria-live="polite">
-    <div class="card kpi"><div class="label">Sesiones</div><div class="v" id="k-ses">—</div><div class="note">100% del escenario</div></div>
-    <div class="card kpi"><div class="label">Sesiones con interacción</div><div class="v" id="k-int">—</div><div class="note">Proxy de compromiso</div></div>
-    <div class="card kpi"><div class="label">Eventos clave proyectados</div><div class="v grad-text" id="k-ek">—</div><div class="note">Resultado modelado; se muestra con un decimal.</div></div>
-    <div class="card kpi"><div class="label">Costo por evento clave (S/)</div><div class="v" id="k-cpk">—</div><div class="note">Inversión hipotética ÷ eventos clave · <b>no es CAC ni CPA real</b></div></div>
+  <!-- ================= UN SOLO CUADRO ================= -->
+  <div class="card calc" aria-live="polite">
+    <div class="calc-head">
+      <div>
+        <div class="kicker" style="color:var(--muted)">Escenario condicionado</div>
+        <h2>Clics WhatsApp proyectados · <span id="r-month">set-26</span></h2>
+      </div>
+      <div class="tools">
+        <button class="cta" id="btn-xlsx">Descargar excel</button>
+      </div>
+    </div>
+
+    <div class="calc-grid">
+      <!-- CONTROLES -->
+      <div class="calc-in">
+        <div class="ctrl">
+          <label for="sel-month">Mes del escenario</label>
+          <select id="sel-month">
+            <option>sep-26</option><option>oct-26</option><option>nov-26</option><option>dic-26</option>
+          </select>
+          <div class="hint">Meses futuros; requieren baseline jun–ago 26.</div>
+        </div>
+
+        <div class="ctrl">
+          <label for="in-ses">Sesiones objetivo</label>
+          <input type="number" id="in-ses" min="1000" step="100" value="5800">
+          <input type="range" id="rg-ses" min="1000" max="12000" step="100" value="5800">
+          <div class="hint">Base del escenario: <span id="hint-ses">—</span></div>
+        </div>
+
+        <div class="ctrl">
+          <label>Preset de eficiencia (multiplica el %CR)</label>
+          <div class="preset-row" id="presets">
+            <button class="preset-btn" data-preset="0" aria-pressed="false">Continuidad</button>
+            <button class="preset-btn" data-preset="25" aria-pressed="true">+25%</button>
+            <button class="preset-btn" data-preset="50" aria-pressed="false">+50%</button>
+            <button class="preset-btn" data-preset="null" aria-pressed="false">Manual <span class="chip-manual" id="chip-manual">Manual</span></button>
+          </div>
+          <div class="hint"><span class="pill warn">Supuesto</span> +25%/+50% elevan la conversión proxy (%CR) a proporción igual por canal. No es benchmark externo.</div>
+          <div class="manualbox" id="manualbox" hidden>
+            <b style="font-size:12px">%CR por canal (manual)</b>
+            <div class="mrow">
+              <div><label for="in-cr-d" style="font-size:11px">Direct (%)</label><input type="number" id="in-cr-d" min="0" max="100" step="0.1" value="31.8"></div>
+              <div><label for="in-cr-o" style="font-size:11px">Organic (%)</label><input type="number" id="in-cr-o" min="0" max="100" step="0.1" value="9.2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="calc-out">
+        <div class="result-main">
+          <div class="bigkpi-panel">
+            <div class="bigkpi">
+              <div class="label">Clics WhatsApp proyectados</div>
+              <div class="v grad-text" id="k-clk">—</div>
+              <div class="note">Resultado modelado; directa + orgánica</div>
+            </div>
+            <div class="bigkpi" style="text-align:right">
+              <div class="label">%CR efectiva</div>
+              <div class="v" id="k-cr">—</div>
+              <div class="note" id="k-cr-note">vs referencia jun–ago 26</div>
+            </div>
+          </div>
+
+          <div class="kpirow">
+            <div class="card kpi"><div class="label">Sesiones</div><div class="v" id="k-ses">—</div></div>
+            <div class="card kpi"><div class="label">Delta vs referencia</div><div class="v" id="k-delta" style="font-size:20px">—</div><div class="note" id="k-delta-note">clics/mes ref. jun–ago 26</div></div>
+            <div class="card kpi"><div class="label">Distribución</div><div class="v" id="k-mix" style="font-size:16px">—</div></div>
+          </div>
+
+          <div class="chancards">
+            <div class="chancard" id="ch-dir"></div>
+            <div class="chancard" id="ch-org"></div>
+          </div>
+
+          <div class="flow" id="flow"></div>
+          <div class="decision" id="decision"></div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="grid g3" style="margin-top:16px" aria-live="polite">
-    <div class="card kpi"><div class="label">Eventos totales estimados</div><div class="v" id="k-evt">—</div><div class="note">Sesiones × eventos/sesión de referencia</div></div>
-    <div class="card kpi"><div class="label">Costo por sesión hipotético (S/)</div><div class="v" id="k-cps">—</div><div class="note">Inversión ÷ sesiones · solo si inversión &gt; 0</div></div>
-    <div class="card kpi"><div class="label">Tráfico con interacción por evento clave</div><div class="v" id="k-traf">—</div><div class="note">Sesiones con interacción ÷ eventos clave</div></div>
-  </div>
-
-  <div class="flow" aria-live="polite" id="flow"></div>
-
-  <div class="decision" id="decision" aria-live="polite"></div>
+  <!-- ================= FIN UN SOLO CUADRO ================= -->
 </section>
 
 <section>
@@ -260,21 +288,22 @@ noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);fo
     <div><div class="kicker">ENE–AGO 2026</div><h2>Evolución mensual: observado y modelado</h2></div>
     <span class="pill info" id="cont-title">—</span>
   </div>
-  <p style="color:var(--muted);font-size:13px;margin:0">Enero 2025 – agosto 2026 observado en GA4. Febrero y marzo 2026 marcados <span class="pill warn">REVISAR</span> por cardinalidad anómala de rutas en Direct (el propio archivo los señala). Setiembre–diciembre 2026: escenario condicionado. Escalas separadas; no comparar entre gráficos.</p>
-
+  <p style="color:var(--muted);font-size:13px;margin:0">Enero 2025 – agosto 2026 observado en «DATA DASH». Junio 2026 marcado <span class="pill warn">REVISAR</span> por %CR Direct &gt; 100% (inconsistencia). Setiembre–diciembre 2026: escenario condicionado.</p>
   <div class="charts" id="charts"></div>
   <div class="legend">
     <span><i class="sw" style="background:var(--blue-dark)"></i> Observado GA4</span>
     <span><i class="sw dash"></i> Escenario modelado</span>
-    <span><i class="sw amb"></i> REVISAR (anomalía estructural)</span>
+    <span><i class="sw amb"></i> REVISAR (inconsistencia)</span>
   </div>
-
   <details style="margin-top:18px">
-    <summary>Ver datos mensuales y estado (comparativo YoY incluido)</summary>
+    <summary>Ver serie mensual DATA DASH por canal</summary>
     <div class="tbl-scroll" style="margin-top:12px">
       <table>
         <thead><tr>
-          <th>Mes</th><th>Estado</th><th>Sesiones</th><th>Con interacción</th><th>Tasa interacción</th><th>Eventos</th><th>Eventos clave</th><th>EK/sesión</th><th>Tiempo medio (s)</th><th>Rutas</th>
+          <th>Mes</th><th>Estado</th>
+          <th>Ses. Direct</th><th>Ses. Organic</th><th>Ses. Total</th>
+          <th>Cl. WA Direct</th><th>Cl. WA Organic</th><th>Cl. WA Total</th>
+          <th>%CR Direct</th><th>%CR Organic</th><th>%CR Total</th>
         </tr></thead>
         <tbody id="tbl-hist"></tbody>
         <tfoot id="tbl-hist-foot"></tfoot>
@@ -285,40 +314,73 @@ noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);fo
 
 <section>
   <div class="section-title">
+    <div><div class="kicker">Conciliación multi-pestaña · verificado</div><h2>Equivalencias entre pestañas del Excel</h2></div>
+    <span class="badge" id="equiv-verdict">—</span>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 16px">Verificación cruzada de las métricas <code>proxy</code> de la auditoría contra la pestaña «DATA DASH», acotadas a <b>Direct + Organic Search</b>: <b>Sesiones por ruta (proxy)</b> ↔ <b>Sesiones</b>, y <b>Eventos clave</b> ↔ <b>Clics WhatsApp</b>. El pivote «Hoja1» (Suma de Eventos clave) cierra la cadena con los totales anuales.</p>
+  <div class="grid g4" id="equiv-kpis"></div>
+  <div class="card" style="margin-top:16px">
+    <h3 style="font-size:15px;margin-bottom:10px">Conciliación mensual · DATA DASH vs Canal mensual vs Tendencia mensual</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr>
+          <th>Mes</th>
+          <th>Ses. DATA DASH</th><th>Ses. Canal mensual</th><th>Δ</th>
+          <th>Cl. WA DATA DASH</th><th>Ev. clave Canal</th><th>Δ</th>
+          <th>Tráfico tendencia</th><th>Cobertura DASH</th>
+        </tr></thead>
+        <tbody id="tbl-equiv"></tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:10px 0 0">«Δ» = diferencias absolutas entre pestañas (con peso en la verificación). <b>Cobertura</b> = sesiones DATA DASH ÷ tráfico total de Tendencia mensual (Paid Search y demás canales quedan fuera de la DASH).</p>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Cobertura de la DATA DASH sobre el tráfico total</h3>
+      <div class="bars" id="bars-cov"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--blue-dark)"></i> Direct + Organic Search</span><span><i class="sw" style="background:#d8d3e8"></i> Resto (Paid Search y otros)</span></div>
+    </div>
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Clics WA (DATA DASH) vs Eventos clave totales (Tendencia)</h3>
+      <div class="bars" id="bars-evk"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--blue-dark)"></i> Clics WA Direct + Organic</span><span><i class="sw" style="background:#d8d3e8"></i> Eventos clave totales (todos los canales)</span></div>
+    </div>
+  </div>
+  <details style="margin-top:18px">
+    <summary>Mapeo de equivalencias (proxy → métrica del dashboard)</summary>
+    <div style="overflow-x:auto;margin-top:8px">
+      <table>
+        <thead><tr><th>Etiqueta del Excel</th><th>Equivalencia en el dashboard</th><th>Estado</th></tr></thead>
+        <tbody id="tbl-equiv-map"></tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">Mix de referencia · jun–ago 26</div><h2>Distribución por canal</h2></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Sesiones del escenario por canal</h3><div class="bars" id="bars-ses"></div></div>
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Clics WhatsApp proyectados por canal</h3><div class="bars" id="bars-clk"></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
     <div><div class="kicker">SET–DIC 2026</div><h2>Plan mensual frente al escenario</h2></div>
   </div>
-  <p style="color:var(--muted);font-size:13px;margin:-8px 0 18px">Los cuatro meses usan el mismo escenario (mismas sesiones, tasas e inversión). Comparación contra el promedio de referencia jun–ago 2026 y contra el máximo observado. No hay trascendencia de metas netas del archivo no confirmadas en el histórico; iPhone: las rutas de feb/mar 2026 desvían la comparación mensual.</p>
-  <div class="grid g4" id="plan-cards"></div>
+  <p style="color:var(--muted);font-size:13px;margin:-8px 0 14px">Los cuatro meses usan el mismo escenario (mismas sesiones y %CR). Comparación contra el promedio de referencia jun–ago 26 (<b id="ref-line">—</b>).</p>
+  <div class="plan-cards" id="plan-cards"></div>
 </section>
 
 <section>
   <div class="section-title">
-    <div><div class="kicker">Estacionalidad y perfil</div><h2>Perfil por mes de calendario: contexto, no causalidad</h2></div>
-    <span class="pill err">Riesgo de modelo alto</span>
-  </div>
-  <p style="color:var(--muted);font-size:13px;margin:-8px 0 16px">Promedio observado por mes de calendario en enero 2025 – agosto 2026. Con 1–2 observaciones por mes no existe regresión válida; los valores son contexto, no coeficientes. El perfil no identifica causalidad: campañas, stock, competencia y tracking no están controlados.</p>
-  <div class="season-cards" id="season-cards"></div>
-</section>
-
-<section>
-  <div class="section-title">
-    <div><div class="kicker">Distribución por canal</div><h2>Asignación del escenario de <span id="d-month">set-26</span></h2></div>
-  </div>
-  <p style="color:var(--muted);font-size:13px;margin:-8px 0 16px">Las sesiones del escenario se distribuyen según el mix observado en el periodo de referencia <b>jun–ago 2026</b>; los eventos clave por canal usan la tasa de cada canal en ese periodo. Es una asignación, no un gasto observado ni un plan de medios.</p>
-  <div class="grid g2">
-    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Eventos clave proyectados por canal</h3><div class="bars" id="bars-channel"></div></div>
-    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Mix del periodo de referencia (sesiones)</h3><div class="bars" id="bars-mix"></div></div>
-  </div>
-</section>
-
-<section>
-  <div class="section-title">
-    <div><div class="kicker">Diagnóstico ejecutivo</div><h2>Qué está pasando y qué movería el desempeño</h2></div>
+    <div><div class="kicker">Diagnóstico ejecutivo</div><h2>Qué dice la DATA DASH</h2></div>
   </div>
   <div class="grid g2">
     <div>
       <div class="kicker">Hallazgos 1–7</div>
-      <p style="color:var(--muted);font-size:13px;margin:4px 0 14px">Observados en el histórico GA4. Sin atribución causal.</p>
+      <p style="color:var(--muted);font-size:13px;margin:4px 0 14px">Observados en la DATA DASH. Sin atribución causal.</p>
       <div id="hallazgos"></div>
     </div>
     <div>
@@ -329,66 +391,37 @@ noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);fo
   </div>
 </section>
 
-</div>
-
-<section role="tabpanel" id="panel-can" aria-labelledby="tab-can" hidden>
-  <div class="wrap">
-    <div class="section-title">
-      <div><div class="kicker">GA4 · Canal mensual</div><h2>Adquisición por canal: sesiones, interacción y conversión proxy</h2></div>
-      <label class="pill info" style="font-size:12px">Fuente: hoja «Canal mensual» · 20 meses · extracción 2026-09-15</label>
-    </div>
-    <div class="grid g3">
-      <div class="card kpi"><div class="label">Canales activos</div><div class="v" id="c-ncan">—</div><div class="note">7–9 por mes; Organic Video intermitente</div></div>
-      <div class="card kpi"><div class="label">Paid Search · share sesiones</div><div class="v" id="c-ps">—</div><div class="note">341,533 sesiones de 507,803</div></div>
-      <div class="card kpi"><div class="label">Paid Search · share eventos clave</div><div class="v" id="c-pske">—</div><div class="note">78,244 de 104,464</div></div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="kicker" style="margin-bottom:12px">Mix total por canal · ene-25 → ago-26</div>
-      <div class="tbl-scroll">
-        <table>
-          <thead><tr><th>Canal</th><th>Sesiones</th><th>% ses.</th><th>Eventos clave</th><th>% EK</th><th>EK/sesión</th></tr></thead>
-          <tbody id="tbl-mix"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="kicker" style="margin-bottom:12px">Canal mensual · periodo</div>
-      <div class="tbl-scroll">
-        <table>
-          <thead><tr><th>Periodo</th><th>Canal</th><th>Sesiones</th><th>Ses. interacción</th><th>Tasa interacción</th><th>Eventos</th><th>Eventos clave</th><th>EK/sesión</th></tr></thead>
-          <tbody id="tbl-channel"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section>
-  <div class="wrap">
+  <div class="wrap" style="max-width:1180px;padding:0">
     <details>
       <summary>Fuentes, fórmulas y limitaciones</summary>
-      <p><b>Fuente:</b> <code>motorex_ga4_auditoria_consolidada_ene2025_ago2026.xlsx</code> (copia en <code>data/raw/</code>, original intacto), hojas «Tendencia mensual», «Canal mensual», «Calidad» y «Consolidado» (20,618 filas). Extracción 2026-09-15. Capas derivadas: <code>motorex_ga4_monthly_trend_2026.csv</code>, <code>motorex_ga4_channel_agg_2026.csv</code>, <code>motorex_ga4_data_quality_2026.csv</code> y manifest <code>motorex_ga4_extraction_manifest_2026.json</code>.</p>
-      <p><b>Cobertura:</b> enero 2025 – agosto 2026 (20 meses). Setiembre 2026 no fue adjuntado (el propio archivo lo marca en la fila FALTA del histórico). Febrero y marzo 2026 tienen estado REVISAR por cardinalidad de rutas anómala (3,682 y 2,578 rutas; ~12.7x y ~8.9x de la mediana), concentrada en tráfico Direct con baja interacción.</p>
-      <p><b>Métricas:</b> «Sesiones por ruta (proxy)» es la métrica del fuente; su suma (507,803) cuadra con las 20,618 filas del Consolidado. Los eventos clave son <b>proxy de conversión</b>: no concilian con transacciones comerciales. Los ingresos GA4 son <b>cero en todo el histórico</b>: no hay señal de ventas en el archivo y por eso el simulador no emite ingresos.</p>
-      <p><b>Fórmulas:</b> Eventos clave = sesiones objetivo × tasa objetivo. Sesiones con interacción = sesiones × tasa de interacción de referencia. Costo por evento clave hipotético = inversión hipotética ÷ eventos clave. Tráfico con interacción por evento clave = sesiones con interacción ÷ eventos clave. Presets +25%/+50%: multiplican la conversión proxy por 1.25/1.50 y dividen el costo por evento clave hipotético por el mismo factor, a costo por sesión constante.</p>
-      <p><b>Baseline:</b> jun–ago 2026 (3 meses completos sin anomalía; pooling: 59,642 sesiones, 17,615 eventos clave, 26.18% eventos clave/sesión, 65.86% interacción, 4.39 eventos/sesión, 24.12 s de tiempo medio). No se usan feb/mar 2026 por ruptura de definición.</p>
-      <p><b>Modelo causal:</b> promoción, stock, precio, competencia y tracking no están controlados; no se identifica causalidad ni incrementalidad. Los presets y la distribución por canal son sensibilidades matemáticas. «Proxy», «hipotético», «condicionado» son términos deliberados: <b>no es forecast, ROAS, CAC ni garantía de ventas</b>.</p>
-      <p><b>Estado:</b> <code>human_review_required</code>. No compartir con cliente sin aprobación humana. Validaciones: 100% de los 20 meses pasan estructura; suma canal = tendencia en los 20 periodos; agregado del Consolidado = tendencia (Δ 0); 0 duplicados canal–ruta.</p>
+      <p><b>Fuente:</b> hoja «DATA DASH» de <code>Motorex_GA4_Auditoria_Consolidada_Ene2025_Ago2026.xlsx</code> (copia en <code>data/raw/</code>, original intacto). Bloque de trimestres con fechas seriales feb–jun… ago; 20 meses: Ene-25 → Ago-26. Extracción 2026-09-15. Capa derivada: <code>motorex_ga4_data_dash_2026.csv</code>.</p>
+      <p><b>Cobertura:</b> 20 meses (ene-25 → ago-26). Setiembre 2026 no adjuntado. Bloque: SESIONES, CLICS WHATSAPP y %CR por canal; canales: Direct y Organic Search.</p>
+      <p><b>Métricas:</b> el %CR es <b>clics WhatsApp ÷ sesiones</b> del propio archivo (conversión proxy; los clics a WhatsApp pueden superar las sesiones en Direct, señal de medición a revisar). No hay transacciones ni ingresos en la hoja.</p>
+      <p><b>Fórmulas:</b> Sesiones por canal = sesiones objetivo × share de sesiones jun–ago 26 (Direct 35.4%, Organic 64.6%). Clics por canal = sesiones del canal × %CR del canal. %CR base por canal = mediana mensual jun–ago 26 (Direct 31.8%, Organic 9.2%). Presets +25%/+50% multiplican el %CR de ambos canales; Manual sobrescribe ambos. Clics totales = suma de canales. %CR efectiva = clics totales ÷ sesiones objetivo.</p>
+      <p><b>Baseline:</b> jun–ago 26 (3 meses). Promedio: 5,800 sesiones/mes; 1,347 clics/mes; 4041 clics totales. Jun-26 Direct con CR 100.3% (inconsistente) excluido de la tasa Direct.</p>
+      <p><b>Modelo:</b> sensibilidad matemática sobre tráfico; <b>no</b> es forecast, CAC, ROAS ni garantía de ventas. Promoción, marca, precio y tracking no están controlados.</p>
+      <p><b>Estado:</b> <code>human_review_required</code>. No compartir con cliente sin aprobación humana.</p>
     </details>
   </div>
 </section>
+
+</div>
 
 <footer class="footer">
   <div class="wrap">
     <div>
       <div class="revi">NO COMPARTIR CON CLIENTE SIN APROBACIÓN HUMANA</div>
-      <div>Motorex.com.pe · GA4 adquisición web · Datos observados ene-25 → ago-26 · modelo actualizado el 15 de septiembre de 2026 · simulación condicionada, revisión humana requerida</div>
+      <div>Motorex.com.pe · GA4 adquisición web · hoja «DATA DASH» ene-25 → ago-26 · modelo actualizado el 15 de septiembre de 2026 · simulación condicionada, revisión humana requerida</div>
     </div>
   </div>
 </footer>
 
 <script id="DATA">
-const DATA = {"monthly":[["ene-25",22602,15060,0.66631272,23.80280506,90590,4.00805238,1916,0.07649766,0,301,798,"OBSERVADO"],["feb-25",43458,30760,0.70780984,25.20705049,190435,4.38204703,15060,0.10706889,0,320,786,"OBSERVADO"],["mar-25",35096,25823,0.73578186,28.88577046,151287,4.31066218,9501,0.10069524,0,294,731,"OBSERVADO"],["abr-25",25888,17828,0.68865884,25.58660383,97946,3.78345179,3423,0.09147095,0,279,723,"OBSERVADO"],["may-25",32130,22182,0.69038282,25.80445067,120659,3.75533769,4936,0.09200124,0,280,752,"OBSERVADO"],["jun-25",25618,17657,0.68924194,22.72976032,97963,3.82399094,3498,0.09263018,0,290,716,"OBSERVADO"],["jul-25",29325,19330,0.65916454,22.14100597,111839,3.81377664,4310,0.0968798,0,277,712,"OBSERVADO"],["ago-25",27776,19289,0.69444844,21.83053715,105609,3.80216734,3301,0.08820565,0,291,744,"OBSERVADO"],["sep-25",22606,15977,0.70675927,24.86277979,86895,3.843891,2386,0.08086349,0,291,775,"OBSERVADO"],["oct-25",22420,15293,0.68211418,23.62158787,87467,3.90129349,2222,0.07604817,0,462,980,"OBSERVADO"],["nov-25",22658,15874,0.7005914,25.40449289,91470,4.03698473,1862,0.05569777,0,346,911,"OBSERVADO"],["dic-25",18215,12935,0.71012901,24.56080154,75609,4.15091957,2857,0.10376064,0,280,641,"OBSERVADO"],["ene-26",25452,18090,0.71074965,24.44086909,103826,4.0792865,4618,0.1358243,0,389,839,"OBSERVADO"],["feb-26",27058,16254,0.60070959,22.15156331,111851,4.13374972,7445,0.12103629,0,3682,4050,"REVISAR"],["mar-26",26344,16097,0.61103097,23.85708321,109140,4.14287883,7594,0.12306408,0,2578,3002,"REVISAR"],["abr-26",21821,14650,0.67137161,23.45424133,95731,4.38710417,8511,0.12249668,0,370,798,"OBSERVADO"],["may-26",19694,13117,0.66604042,27.74596324,82266,4.17721133,3409,0.11033817,0,259,649,"OBSERVADO"],["jun-26",19797,13348,0.67424357,22.67899177,91239,4.6087286,8904,0.19376673,0,245,687,"OBSERVADO"],["jul-26",18190,11720,0.64431006,24.21726223,76768,4.22034085,3577,0.126663,0,287,676,"OBSERVADO"],["ago-26",21655,14213,0.65633803,25.47725698,93797,4.33142461,5134,0.12297391,0,272,648,"OBSERVADO"]],"channel":[["abr-25","Cross-network",104,83,0.798077,522,5.019231,12,0.115385],["abr-25","Direct",3026,1855,0.61302,11950,3.949108,613,0.202578],["abr-25","Organic Search",5448,3811,0.699523,21217,3.894457,337,0.061858],["abr-25","Organic Social",55,26,0.472727,191,3.472727,2,0.036364],["abr-25","Paid Search",16842,11875,0.705083,62728,3.724498,2445,0.145173],["abr-25","Paid Social",122,22,0.180328,394,3.229508,0,0],["abr-25","Referral",151,108,0.715232,535,3.543046,5,0.033113],["abr-25","Unassigned",140,48,0.342857,409,2.921429,9,0.064286],["abr-26","Cross-network",181,172,0.950276,947,5.232044,28,0.154696],["abr-26","Direct",2154,1136,0.527391,10919,5.069174,1233,0.572423],["abr-26","Organic Search",4559,3105,0.68107,17187,3.769906,442,0.096951],["abr-26","Organic Social",34,26,0.764706,129,3.794118,2,0.058824],["abr-26","Organic Video",3,3,1,11,3.666667,0,0],["abr-26","Paid Search",14345,9915,0.691182,64806,4.517672,6779,0.472569],["abr-26","Referral",223,134,0.600897,635,2.847534,13,0.058296],["abr-26","Unassigned",322,159,0.493789,1097,3.406832,14,0.043478],["ago-25","Cross-network",166,126,0.759036,888,5.349398,15,0.090361],["ago-25","Direct",2445,1455,0.595092,9368,3.831493,469,0.19182],["ago-25","Organic Search",5002,3464,0.692523,19055,3.809476,283,0.056577],["ago-25","Organic Social",33,24,0.727273,120,3.636364,0,0],["ago-25","Paid Search",19723,14013,0.71049,74864,3.795771,2515,0.127516],["ago-25","Paid Social",67,15,0.223881,226,3.373134,1,0.014925],["ago-25","Referral",139,100,0.719424,481,3.460432,5,0.035971],["ago-25","Unassigned",201,92,0.457711,607,3.0199,13,0.064677],["ago-26","AI Assistant",43,33,0.767442,151,3.511628,6,0.139535],["ago-26","Cross-network",182,172,0.945055,1036,5.692308,46,0.252747],["ago-26","Direct",2910,1346,0.462543,12306,4.228866,740,0.254296],["ago-26","Organic Search",3848,2721,0.707121,14519,3.773129,351,0.091216],["ago-26","Organic Social",55,42,0.763636,214,3.890909,2,0.036364],["ago-26","Paid Search",14294,9710,0.679306,64464,4.509864,3962,0.277179],["ago-26","Referral",97,67,0.690722,346,3.56701,9,0.092784],["ago-26","Unassigned",226,122,0.539823,761,3.367257,18,0.079646],["dic-25","Cross-network",86,78,0.906977,498,5.790698,16,0.186047],["dic-25","Direct",1137,602,0.529464,5842,5.138083,670,0.58927],["dic-25","Organic Search",3973,2854,0.718349,16762,4.218978,390,0.098163],["dic-25","Organic Social",40,22,0.55,136,3.4,0,0],["dic-25","Organic Video",4,4,1,25,6.25,1,0.25],["dic-25","Paid Search",12677,9210,0.726513,51129,4.03321,1752,0.138203],["dic-25","Referral",151,106,0.701987,646,4.278146,8,0.05298],["dic-25","Unassigned",147,59,0.401361,571,3.884354,20,0.136054],["ene-25","Direct",1943,926,0.476583,7179,3.694802,173,0.089038],["ene-25","Organic Search",5788,4124,0.712509,22543,3.894782,347,0.059952],["ene-25","Organic Social",716,524,0.731844,2607,3.641061,60,0.083799],["ene-25","Organic Video",2,1,0.5,8,4,0,0],["ene-25","Paid Search",13733,9200,0.669919,56799,4.13595,1308,0.095245],["ene-25","Referral",235,200,0.851064,838,3.565957,12,0.051064],["ene-25","Unassigned",185,85,0.459459,616,3.32973,16,0.086486],["ene-26","Cross-network",169,158,0.934911,981,5.804734,24,0.142012],["ene-26","Direct",1545,820,0.530744,6033,3.904854,327,0.21165],["ene-26","Organic Search",4865,3505,0.720452,19930,4.096608,535,0.109969],["ene-26","Organic Social",47,35,0.744681,165,3.510638,2,0.042553],["ene-26","Organic Video",2,2,1,6,3,0,0],["ene-26","Paid Search",18310,13238,0.722993,74852,4.088039,3680,0.200983],["ene-26","Referral",328,231,0.704268,1231,3.753049,23,0.070122],["ene-26","Unassigned",186,101,0.543011,628,3.376344,27,0.145161],["feb-25","Direct",4764,3235,0.679051,22384,4.698573,3666,0.769521],["feb-25","Organic Search",5356,3751,0.700336,20530,3.833084,340,0.06348],["feb-25","Organic Social",588,434,0.738095,2228,3.789116,54,0.091837],["feb-25","Organic Video",12,12,1,58,4.833333,1,0.083333],["feb-25","Paid Search",32345,23129,0.715072,141277,4.367816,9818,0.30354],["feb-25","Referral",177,131,0.740113,619,3.497175,15,0.084746],["feb-25","Unassigned",216,68,0.314815,3339,15.458333,1166,5.398148],["feb-26","Cross-network",267,255,0.955056,1500,5.617978,61,0.228464],["feb-26","Direct",6135,899,0.146536,21106,3.440261,663,0.108068],["feb-26","Organic Search",4299,3035,0.705978,16489,3.835543,485,0.112817],["feb-26","Organic Social",52,35,0.673077,173,3.326923,2,0.038462],["feb-26","Organic Video",8,7,0.875,29,3.625,0,0],["feb-26","Paid Search",15962,11844,0.742012,71366,4.470994,6185,0.387483],["feb-26","Referral",173,102,0.589595,652,3.768786,33,0.190751],["feb-26","Unassigned",162,77,0.475309,536,3.308642,16,0.098765],["jul-25","Cross-network",173,105,0.606936,821,4.745665,15,0.086705],["jul-25","Direct",2905,1640,0.564544,11333,3.901205,617,0.212392],["jul-25","Organic Search",5137,3513,0.683862,19701,3.835118,314,0.061125],["jul-25","Organic Social",60,47,0.783333,203,3.383333,2,0.033333],["jul-25","Organic Video",8,7,0.875,28,3.5,0,0],["jul-25","Paid Search",20656,13853,0.670653,78502,3.800445,3346,0.161987],["jul-25","Paid Social",83,12,0.144578,261,3.144578,0,0],["jul-25","Referral",136,97,0.713235,473,3.477941,4,0.029412],["jul-25","Unassigned",167,56,0.335329,517,3.095808,12,0.071856],["jul-26","AI Assistant",37,27,0.72973,160,4.324324,6,0.162162],["jul-26","Cross-network",208,186,0.894231,1201,5.774038,44,0.211538],["jul-26","Direct",1478,544,0.368065,5851,3.958728,470,0.317997],["jul-26","Organic Search",3496,2433,0.695938,13508,3.863844,321,0.091819],["jul-26","Organic Social",22,14,0.636364,78,3.545455,0,0],["jul-26","Organic Video",1,1,1,4,4,0,0],["jul-26","Paid Search",12663,8372,0.661139,54976,4.341467,2717,0.214562],["jul-26","Referral",113,72,0.637168,422,3.734513,8,0.070796],["jul-26","Unassigned",172,71,0.412791,568,3.302326,11,0.063953],["jun-25","Cross-network",141,91,0.64539,700,4.964539,14,0.099291],["jun-25","Direct",2878,1840,0.639333,11329,3.936414,649,0.225504],["jun-25","Organic Search",5528,3863,0.698806,21374,3.866498,303,0.054812],["jun-25","Organic Social",38,22,0.578947,155,4.078947,3,0.078947],["jun-25","Paid Search",16595,11596,0.698765,62912,3.791021,2479,0.149382],["jun-25","Paid Social",118,62,0.525424,421,3.567797,18,0.152542],["jun-25","Referral",164,121,0.737805,583,3.554878,16,0.097561],["jun-25","Unassigned",156,62,0.397436,489,3.134615,16,0.102564],["jun-26","AI Assistant",41,23,0.560976,147,3.585366,9,0.219512],["jun-26","Cross-network",104,85,0.817308,509,4.894231,22,0.211538],["jun-26","Direct",1764,878,0.497732,9712,5.505669,1769,1.002834],["jun-26","Organic Search",3906,2655,0.679724,14896,3.81362,390,0.099846],["jun-26","Organic Social",33,24,0.727273,135,4.090909,0,0],["jun-26","Paid Search",13502,9467,0.701155,64539,4.779959,6685,0.495112],["jun-26","Referral",174,130,0.747126,578,3.321839,15,0.086207],["jun-26","Unassigned",273,86,0.315018,723,2.648352,14,0.051282],["mar-25","Cross-network",12,11,0.916667,71,5.916667,1,0.083333],["mar-25","Direct",3517,2373,0.674723,15470,4.398635,1639,0.466022],["mar-25","Organic Search",5932,4078,0.687458,23098,3.893796,440,0.074174],["mar-25","Organic Social",201,50,0.248756,662,3.293532,4,0.0199],["mar-25","Organic Video",2,1,0.5,6,3,0,0],["mar-25","Paid Search",25065,19131,0.763256,110801,4.420547,7389,0.294794],["mar-25","Referral",140,90,0.642857,510,3.642857,8,0.057143],["mar-25","Unassigned",227,89,0.39207,669,2.947137,20,0.088106],["mar-26","Cross-network",234,219,0.935897,1243,5.311966,60,0.25641],["mar-26","Direct",4652,1045,0.224635,18012,3.871883,1129,0.242691],["mar-26","Organic Search",4821,3283,0.680979,18317,3.799419,462,0.095831],["mar-26","Organic Social",38,25,0.657895,145,3.815789,2,0.052632],["mar-26","Paid Search",16070,11227,0.698631,69505,4.32514,5903,0.36733],["mar-26","Referral",196,128,0.653061,659,3.362245,11,0.056122],["mar-26","Unassigned",333,170,0.510511,1259,3.780781,27,0.081081],["may-25","Cross-network",139,107,0.769784,667,4.798561,8,0.057554],["may-25","Direct",3759,2424,0.644852,15423,4.102953,940,0.250067],["may-25","Organic Search",5382,3752,0.697139,20954,3.893348,315,0.058528],["may-25","Organic Social",48,32,0.666667,183,3.8125,4,0.083333],["may-25","Paid Search",22238,15617,0.702266,81582,3.668585,3643,0.163819],["may-25","Paid Social",170,29,0.170588,534,3.141176,1,0.005882],["may-25","Referral",154,110,0.714286,599,3.88961,10,0.064935],["may-25","Unassigned",240,111,0.4625,717,2.9875,15,0.0625],["may-26","Cross-network",251,228,0.908367,1271,5.063745,37,0.14741],["may-26","Direct",1839,959,0.521479,7776,4.228385,225,0.122349],["may-26","Organic Search",4327,3000,0.693321,16668,3.852092,380,0.087821],["may-26","Organic Social",36,28,0.777778,142,3.944444,0,0],["may-26","Paid Search",12643,8582,0.678795,54199,4.286878,2731,0.216009],["may-26","Referral",217,144,0.663594,824,3.797235,16,0.073733],["may-26","Unassigned",381,176,0.461942,1386,3.637795,20,0.052493],["nov-25","Cross-network",171,161,0.94152,1043,6.099415,21,0.122807],["nov-25","Direct",1761,1039,0.590006,7778,4.416809,112,0.0636],["nov-25","Organic Search",5267,3623,0.687868,20502,3.892538,216,0.04101],["nov-25","Organic Social",31,18,0.580645,115,3.709677,0,0],["nov-25","Paid Search",14788,10718,0.724777,59912,4.051393,1496,0.101163],["nov-25","Referral",283,208,0.734982,1110,3.922261,10,0.035336],["nov-25","Unassigned",357,107,0.29972,1010,2.829132,7,0.019608],["oct-25","Cross-network",157,144,0.917197,868,5.528662,27,0.171975],["oct-25","Direct",1833,970,0.529187,7236,3.947627,205,0.111839],["oct-25","Organic Search",5311,3488,0.65675,20277,3.817925,287,0.054039],["oct-25","Organic Social",33,26,0.787879,128,3.878788,1,0.030303],["oct-25","Organic Video",5,4,0.8,23,4.6,0,0],["oct-25","Paid Search",14554,10419,0.715886,57460,3.948056,1683,0.115638],["oct-25","Referral",193,141,0.73057,650,3.367876,5,0.025907],["oct-25","Unassigned",334,101,0.302395,825,2.47006,14,0.041916],["sep-25","Cross-network",126,108,0.857143,664,5.269841,18,0.142857],["sep-25","Direct",1895,1102,0.58153,7133,3.764116,263,0.138786],["sep-25","Organic Search",5592,3856,0.689557,21588,3.860515,343,0.061338],["sep-25","Organic Social",26,25,0.961538,98,3.769231,1,0.038462],["sep-25","Paid Search",14528,10660,0.733756,56058,3.858618,1728,0.118943],["sep-25","Paid Social",29,25,0.862069,76,2.62069,0,0],["sep-25","Referral",147,121,0.823129,579,3.938776,11,0.07483],["sep-25","Unassigned",263,80,0.304183,699,2.657795,22,0.08365]]};
+const DATA = {"monthly":[["ene-25",1943,5788,7731,173,347,520,0.089038,0.059952,0.067262],["feb-25",4764,5356,10120,3666,340,4006,0.769521,0.06348,0.39585],["mar-25",3517,5932,9449,1639,440,2079,0.466022,0.074174,0.220023],["abr-25",3026,5448,8474,613,337,950,0.202578,0.061858,0.112108],["may-25",3759,5382,9141,940,315,1255,0.250067,0.058528,0.137294],["jun-25",2878,5528,8406,649,303,952,0.225504,0.054812,0.113252],["jul-25",2905,5137,8042,617,314,931,0.212392,0.061125,0.115767],["ago-25",2445,5002,7447,469,283,752,0.19182,0.056577,0.10098],["sep-25",1895,5592,7487,263,343,606,0.138786,0.061338,0.08094],["oct-25",1833,5311,7144,205,287,492,0.111839,0.054039,0.068869],["nov-25",1761,5267,7028,112,216,328,0.0636,0.04101,0.04667],["dic-25",1137,3973,5110,670,390,1060,0.58927,0.098163,0.207436],["ene-26",1545,4865,6410,327,535,862,0.21165,0.109969,0.134477],["feb-26",6135,4299,10434,663,485,1148,0.108068,0.112817,0.110025],["mar-26",4652,4821,9473,1129,462,1591,0.242691,0.095831,0.167951],["abr-26",2154,4559,6713,1233,442,1675,0.572423,0.096951,0.249516],["may-26",1839,4327,6166,225,380,605,0.122349,0.087821,0.098119],["jun-26",1764,3906,5670,1769,390,2159,1.002834,0.099846,0.380776],["jul-26",1478,3496,4974,470,321,791,0.317997,0.091819,0.159027],["ago-26",2910,3848,6758,740,351,1091,0.254296,0.091216,0.161438]]};
+</script>
+<script>
+const CMP={"canal":[["ene-25",1943,5788,173,347],["feb-25",4764,5356,3666,340],["mar-25",3517,5932,1639,440],["abr-25",3026,5448,613,337],["may-25",3759,5382,940,315],["jun-25",2878,5528,649,303],["jul-25",2905,5137,617,314],["ago-25",2445,5002,469,283],["sep-25",1895,5592,263,343],["oct-25",1833,5311,205,287],["nov-25",1761,5267,112,216],["dic-25",1137,3973,670,390],["ene-26",1545,4865,327,535],["feb-26",6135,4299,663,485],["mar-26",4652,4821,1129,462],["abr-26",2154,4559,1233,442],["may-26",1839,4327,225,380],["jun-26",1764,3906,1769,390],["jul-26",1478,3496,470,321],["ago-26",2910,3848,740,351]],"trend":[["ene-25",22602,1916],["feb-25",43458,15060],["mar-25",35096,9501],["abr-25",25888,3423],["may-25",32130,4936],["jun-25",25618,3498],["jul-25",29325,4310],["ago-25",27776,3301],["sep-25",22606,2386],["oct-25",22420,2222],["nov-25",22658,1862],["dic-25",18215,2857],["ene-26",25452,4618],["feb-26",27058,7445],["mar-26",26344,7594],["abr-26",21821,8511],["may-26",19694,3409],["jun-26",19797,8904],["jul-26",18190,3577],["ago-26",21655,5134]],"hoja1":[13931,9922]};
 </script>
 <script>
 /* ---------- util ---------- */
@@ -396,251 +429,231 @@ const $=s=>document.querySelector(s);
 const nf=new Intl.NumberFormat('es-PE',{maximumFractionDigits:0});
 const nf1=new Intl.NumberFormat('es-PE',{minimumFractionDigits:1,maximumFractionDigits:1});
 const pct=(x,d=1)=>((x)*100).toFixed(d)+'%';
-const monthLabel=m=>m.replace(/(...)-(\d+)/,(_,a,b)=>capa(b)+'-'+a.toUpperCase());
-function capa(m){const map={'01':'ENE','02':'FEB','03':'MAR','04':'ABR','05':'MAY','06':'JUN','07':'JUL','08':'AGO','09':'SET','10':'OCT','11':'NOV','12':'DIC'};return map[m]||m;}
 function fmtMonth(p){const [mm,yy]=p.split('-');const map={'ene':'ENE','feb':'FEB','mar':'MAR','abr':'ABR','may':'MAY','jun':'JUN','jul':'JUL','ago':'AGO','sep':'SET','oct':'OCT','nov':'NOV','dic':'DIC'};return map[mm]+'-'+yy.slice(-2);}
 
-/* ---------- data ---------- */
-const M = DATA.monthly.map(r=>({
-  period:r[0], sessions:+r[1], engaged:+r[2], eRate:+r[3], dur:+r[4], events:+r[5],
-  eps:+r[6], keyEvents:+r[7], keyRate:+r[8], revenue:+r[9], routes:+r[10], rows:+r[11], status:r[12]
+/* ---------- data DATA DASH ---------- */
+const M=DATA.monthly.map(r=>({
+  period:r[0], sesD:+r[1], sesO:+r[2], sesT:+r[3],
+  clkD:+r[4], clkO:+r[5], clkT:+r[6],
+  crD:+r[7], crO:+r[8], crT:+r[9]
 }));
-const CH = DATA.channel.map(r=>({period:r[0],channel:r[1],sessions:+r[2],engaged:+r[3],eRate:+r[4],events:+r[5],eps:+r[6],keyEvents:+r[7],keyRate:+r[8]}));
+const EQ_TR=new Map(CMP.trend.map(r=>[r[0],{ses:r[1],kev:r[2]}]));
+const EQ_CM=new Map(CMP.canal.map(r=>[r[0],{sesD:r[1],sesO:r[2],clkD:r[3],clkO:r[4]}]));
+const EQ_TOT={sesD:M.reduce((a,m)=>a+m.sesD,0),sesO:M.reduce((a,m)=>a+m.sesO,0),clkD:M.reduce((a,m)=>a+m.clkD,0),clkO:M.reduce((a,m)=>a+m.clkO,0)};
 
 const REF=['jun-26','jul-26','ago-26'];
 const refRows=M.filter(m=>REF.includes(m.period));
-const refSessions=refRows.reduce((a,b)=>a+b.sessions,0);
-const refKey=refRows.reduce((a,b)=>a+b.keyEvents,0);
-const refEngaged=refRows.reduce((a,b)=>a+b.engaged,0);
-const refEvents=refRows.reduce((a,b)=>a+b.events,0);
-const refDur=refRows.reduce((a,b)=>a+b.dur*b.sessions,0)/refSessions;
-const REF_KE=refKey/refSessions;           // 0.2618 - convert rate proxy baseline
-const REF_INT=refEngaged/refSessions;      // 0.6586
-const REF_EPS=refEvents/refSessions;       // 4.39
-const MAX_TAS=Math.max(...M.map(m=>m.keyEvents/m.sessions));
-const maxKeRow=M.reduce((a,b)=>a.keyEvents>b.keyEvents?a:b);
-
-const FUT=['sep-26','oct-26','nov-26','dic-26'];
-const FIT_MONTH=f=>f;
+const refSesD=refRows.reduce((a,b)=>a+b.sesD,0);
+const refSesO=refRows.reduce((a,b)=>a+b.sesO,0);
+const refSesT=refSesD+refSesO;
+const refClkD=refRows.reduce((a,b)=>a+b.clkD,0);
+const refClkO=refRows.reduce((a,b)=>a+b.clkO,0);
+const refClkT=refClkD+refClkO;
+const SHARE_D=refSesD/refSesT;          // 0.3535
+const SHARE_O=refSesO/refSesT;          // 0.6465
+// mediana mensual jun-ago 26 por canal (robusta)
+const med=a=>[...a].sort((x,y)=>x-y)[Math.floor(a.length/2)];
+const baseCr=refRows.map(m=>m.crD); const baseCo=refRows.map(m=>m.crO);
+const CR_D=med(baseCr);                 // 0.318
+const CR_O=med(baseCo);                 // 0.0918
+const REF_CLK_MES=refClkT/3;            // 1347
+const REF_SES_MES=refSesT/3;            // 5800
+const MAX_CR_T=Math.max(...M.map(m=>m.crT));
+const maxClkRow=M.reduce((a,b)=>a.clkT>b.clkT?a:b);
 
 /* ---------- state ---------- */
-const st={preset:'25',manual:false,sessions:20000,tasa:REF_KE*100,int:REF_INT*100,inv:0};
-function refreshState(){}
-function markManual(){ st.manual=true; $('#chip-manual').classList.add('show');
+const st={preset:'25',manual:false,sessions:REF_SES_MES,crD:CR_D*100,crO:CR_O*100};
+function markManual(){ st.manual=true; $('#chip-manual').classList.add('show'); $('#manualbox').hidden=false;
   document.querySelectorAll('#presets .preset-btn').forEach(b=>{ if(b.dataset.preset!=='null')b.setAttribute('aria-pressed','false'); });
   $('#presets .preset-btn[data-preset="null"]').setAttribute('aria-pressed','true');
 }
 function setPreset(p){
-  st.preset=p; st.manual=false; $('#chip-manual').classList.remove('show');
+  st.preset=p; st.manual=false; $('#chip-manual').classList.remove('show'); $('#manualbox').hidden=true;
   document.querySelectorAll('#presets .preset-btn').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.preset)===String(p)));
-  $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
 }
-const round1=x=>Math.round(x*10)/10;
 
 /* compute */
-function effectiveTasa(){
-  if(st.manual) return (+$('#in-tas').value)/100;
+function effectiveCrs(){
+  if(st.manual){
+    return {d:(+$('#in-cr-d').value||0)/100, o:(+$('#in-cr-o').value||0)/100};
+  }
   const f=st.preset==='25'?1.25:(st.preset==='50'?1.5:1);
-  return st.tasa/100*f;
+  return {d:CR_D*f, o:CR_O*f};
 }
 function compute(){
   const ses=+$('#in-ses').value||0;
-  const tasa=effectiveTasa();
-  const inter=(+$('#in-int').value)/100;
-  const inv=+$('#in-inv').value||0;
-  const ek=ses*tasa;
-  const interSes=ses*inter;
-  const evt=ses*REF_EPS;
-  const cpk=ek>0?inv/ek:0;
-  const cps=ses>0?inv/ses:0;
-  const traf=ek>0?interSes/ek:0;
-  return {ses,tasa,inter,inv,ek,interSes,evt,cpk,cps,traf};
+  const {d,o}=effectiveCrs();
+  const sesD=ses*SHARE_D, sesO=ses*SHARE_O;
+  const clkD=sesD*d, clkO=sesO*o, clkT=clkD+clkO;
+  const crEff=ses>0?clkT/ses:0;
+  const delta=clkT-REF_CLK_MES;
+  return {ses,sesD,sesO,clkD,clkO,clkT,crD:d,crO:o,crEff,delta};
 }
 
-/* render KPIs */
-const FNEW=1.25;
-let flowRendered=false;
+/* ---------- render ---------- */
 function renderRes(){
   const month=$('#sel-month').value;
   const c=compute();
   $('#r-month').textContent=fmtMonth(month);
-  $('#d-month').textContent=fmtMonth(month);
+  $('#k-clk').textContent=nf.format(Math.round(c.clkT));
+  $('#k-cr').textContent=pct(c.crEff);
+  $('#k-cr-note').textContent='mediana Direct '+pct(CR_D)+' · Organic '+pct(CR_O);
   $('#k-ses').textContent=nf.format(Math.round(c.ses));
-  $('#k-int').textContent=nf.format(Math.round(c.interSes));
-  $('#k-ek').textContent=nf1.format(Math.round(c.ek*10)/10);
-  $('#k-cpk').textContent = c.inv>0 ? 'S/ '+nf.format(c.cpk) : 'sin inversión hipotética';
-  $('#k-evt').textContent=nf.format(Math.round(c.evt));
-  $('#k-cps').textContent = c.inv>0 ? 'S/ '+nf.format(c.cps) : '—';
-  $('#k-traf').textContent = c.ek>0 ? c.traf.toFixed(2)+' por EK' : '—';
-  $('#flow').innerHTML=
-    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> sesiones × <b>'+pct(c.tasa)+'</b> EK/sesión</span><span class="op">=</span>'+
-    '<span class="chip"><b>'+nf1.format(c.ek)+'</b> eventos clave</span><span class="op">·</span>'+
-    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> × <b>'+pct(c.inter)+'</b> interacción</span><span class="op">=</span>'+
-    '<span class="chip"><b>'+nf.format(Math.round(c.interSes))+'</b> sesiones con interacción</span><span class="op">·</span>'+
-    '<span class="chip">'+c.traf.toFixed(2)+' sesiones con interacción por evento clave</span>'+
-    (c.inv>0?'<span class="op">·</span><span class="chip">S/ '+nf.format(c.inv)+' ÷ '+nf1.format(c.ek)+' = <b>'+nf.format(c.cpk)+'</b> S/ por EK (hipotético)</span>':'');
-  /* decision */
+  const cls=c.delta>=0?'pos':'neg';
+  $('#k-delta').innerHTML='<span class="delta '+cls+'">'+(c.delta>=0?'+':'')+nf.format(Math.round(c.delta))+'</span>';
+  $('#k-delta-note').textContent='vs '+nf.format(Math.round(REF_CLK_MES))+' clics/mes ref. jun–ago 26';
+  $('#k-mix').textContent=pct(SHARE_D)+' Direct · '+pct(SHARE_O)+' Organic';
+  $('#ch-dir').innerHTML='<div class="ch">Direct</div><div class="cv">'+nf.format(Math.round(c.clkD))+'</div><div class="cd">'+nf.format(Math.round(c.sesD))+' sesiones · %CR '+pct(c.crD)+'</div>';
+  $('#ch-org').innerHTML='<div class="ch">Organic Search</div><div class="cv">'+nf.format(Math.round(c.clkO))+'</div><div class="cd">'+nf.format(Math.round(c.sesO))+' sesiones · %CR '+pct(c.crO)+'</div>';
   const f=st.manual?1:(st.preset==='25'?1.25:(st.preset==='50'?1.5:1));
-  let txt;
-  /* compare against observed max */
-  txt='Al escenario actual corresponden '+nf1.format(c.ek)+' eventos clave (conversión proxy '+pct(c.tasa)+'), frente a un promedio de referencia de '+nf.format(Math.round(refSessions/3))+ ' sesiones y '+nf.format(Math.round(refKey/3))+' eventos clave por mes en jun–ago 2026.';
-  if(c.ek>maxKeRow.keyEvents){
-    txt+= ' Supera el máximo mensual observado ('+nf.format(maxKeRow.keyEvents)+' EK en '+fmtMonth(maxKeRow.period)+'). Ajusta las sesiones o la tasa si buscas un escenario conservador.';
-  }else if(c.ek<refKey){
-    txt+=' Está por debajo del promedio de referencia: es un escenario de contracción de conversión proxy.';
-  }else{
-    txt+=' Se mantiene en el rango de la observación reciente (escenario de continuidad).';
-  }
-  txt+= c.inv>0 ? ' El costo por evento clave hipotético de S/ '+nf.format(c.cpk)+' es una sensibilidad informativa, no un dato de plataforma.' : '';
+  $('#flow').innerHTML=
+    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> ses. × '+pct(SHARE_D)+'</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.sesD))+'</b> Direct × <b>'+pct(c.crD)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkD))+'</b> clics</span><span class="op">·</span>'+
+    '<span class="chip"><b>'+nf.format(Math.round(c.sesO))+'</b> Organic × <b>'+pct(c.crO)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkO))+'</b> clics</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkT))+'</b> clics WA total</span>'+
+    (f!==1?'<span class="op">·</span><span class="chip">factor preset ×'+f+'</span>':'');
+  let txt='Al escenario corresponden '+nf.format(Math.round(c.clkT))+' clics a WhatsApp (conversión proxy '+pct(c.crEff)+'), frente a un promedio de referencia de '+nf.format(Math.round(REF_CLK_MES))+' clics/mes en jun–ago 26.';
+  if(c.clkT>maxClkRow.clkT){ txt+=' Supera el máximo mensual observado ('+nf.format(maxClkRow.clkT)+' clics en '+fmtMonth(maxClkRow.period)+'). Ajusta sesiones o %CR si buscas conservadurismo.'; }
+  else if(c.clkT<REF_CLK_MES){ txt+=' Está por debajo del promedio de referencia: escenario de contracción.'; }
+  else { txt+=' Se mantiene en el rango de la observación reciente (escenario de continuidad).'; }
   $('#decision').innerHTML='<h3>Contraste contra la observación</h3><p>'+txt+'</p>';
   renderCharts();
   renderPlan();
-  renderChannels();
 }
-function tasaRefForPrint(){return REF_KE;}
-let chartsRendered=false,planRendered=false,channelRendered=false;
-
-/* ---------- charts ---------- */
-function spark(id,series,cfg){
-  /* series:[{per:sessions}] */
+function buildSeries(metric){
+  const ser=[];
+  M.forEach(m=>{ let v; if(metric==='sessions')v=m.sesT; else if(metric==='clicks')v=m.clkT; else v=m.crT;
+    ser.push({per:m.period,v,kind:'obs'}); });
+  const c=compute();
+  const v=metric==='sessions'?c.ses:metric==='clicks'?c.clkT:c.crEff;
+  const FUT=['sep-26','oct-26','nov-26','dic-26'];
+  FUT.forEach(per=>ser.push({per,v,kind:'mod'}));
+  return ser;
+}
+function spark(series,cfg){
   const W=300,H=100,pad=6;
   const vals=series.map(s=>s.v);
   const vmin=Math.min(...vals),vmax=Math.max(...vals),range=(vmax-vmin)||1;
   const x=i=>pad+(W-pad*2)*i/(vals.length-1);
   const y=v=>H-pad-(v-vmin)/range*(H-pad*2);
-  let path='';
-  const obs=[]
-  const model=[];
+  const obs=[]; const model=[];
   series.forEach((s,i)=>{ if(s.kind==='obs')obs.push([i,s.v]); else model.push([i,s.v]); });
-  path='M'+obs.concat(model).map(o=>x(o[0]).toFixed(1)+','+y(o[1]).toFixed(1)).join(' L');
+  const path='M'+obs.concat(model).map(o=>x(o[0]).toFixed(1)+','+y(o[1]).toFixed(1)).join(' L');
   let px='';
-  obs.forEach(o=>{ if(!['feb-26','mar-26'].includes(series[o[0]].per)) px+='<circle cx="'+x(o[0]).toFixed(1)+'" cy="'+y(o[1]).toFixed(1)+'" r="2.6" fill="#466b9f"/>'; });
-  obs.forEach(o=>{ if(['feb-26','mar-26'].includes(series[o[0]].per)) px+='<rect x="'+(x(o[0])-3).toFixed(1)+'" y="'+(y(o[1])-3).toFixed(1)+'" width="6" height="6" fill="#fff3e6" stroke="#8c5c28" stroke-width="1.5" rx="1"/>'; });
+  obs.forEach(o=>{ const per=series[o[0]].per;
+    if(per==='jun-26') px+='<rect x="'+(x(o[0])-3).toFixed(1)+'" y="'+(y(o[1])-3).toFixed(1)+'" width="6" height="6" fill="#fff3e6" stroke="#8c5c28" stroke-width="1.5" rx="1"/>';
+    else px+='<circle cx="'+x(o[0]).toFixed(1)+'" cy="'+y(o[1]).toFixed(1)+'" r="2.6" fill="#466b9f"/>'; });
   model.forEach(o=>{ px+='<circle cx="'+x(o[0]).toFixed(1)+'" cy="'+y(o[1]).toFixed(1)+'" r="2.6" fill="#fff" stroke="#b170b5" stroke-width="1.5"/>'; });
-  const tips=series.map((s,i)=>'<title>'+fmtMonth(s.per)+': '+cfg.fmt(s.v)+' ('+($('#sel-month').value===s.per?'escenario':'observado')+')</title>').join('');
-  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+cfg.label+'">'+tips+
-    '<path d="'+path+'" fill="none" stroke="#466b9f" stroke-width="1.8"/>'+px+'</svg>';
-}
-function buildSeries(metric){
-  const ser=[];
-  M.forEach(m=>{ let v; if(metric==='sessions')v=m.sessions; else if(metric==='keyEvents')v=m.keyEvents; else if(metric==='keyRate')v=m.keyEvents/m.sessions; else if(metric==='events')v=m.events; else v=m.engaged;
-    ser.push({per:m.period,v,kind:'obs'}); });
-  const c=compute();
-  const v= metric==='sessions'?c.ses: metric==='keyEvents'?c.ek : metric==='keyRate'?c.tasa : metric==='events'?c.evt : c.interSes;
-  FUT.forEach(per=>ser.push({per,v,kind:'mod'}));
-  return ser;
+  const tips=series.map(s=>'<title>'+fmtMonth(s.per)+': '+cfg.fmt(s.v)+' ('+($('#sel-month').value===s.per?'escenario':'observado')+')</title>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+cfg.label+'">'+tips+'<path d="'+path+'" fill="none" stroke="#466b9f" stroke-width="1.8"/>'+px+'</svg>';
 }
 function renderCharts(){
-  const c=compute();
   $('#charts').innerHTML=
-    '<div class="mini"><h4>Sesiones</h4>'+spark('s1',buildSeries('sessions'),{label:'Sesiones por mes',fmt:v=>nf.format(v)})+ '</div>'+
-    '<div class="mini"><h4>Eventos clave / sesión (proxy)</h4>'+spark('s2',buildSeries('keyRate'),{label:'Conversión proxy por mes',fmt:v=>pct(v)})+ '</div>'+
-    '<div class="mini"><h4>Eventos clave</h4>'+spark('s3',buildSeries('keyEvents'),{label:'Eventos clave por mes',fmt:v=>nf.format(v)})+ '</div>'+
-    '<div class="mini"><h4>Eventos totales</h4>'+spark('s4',buildSeries('events'),{label:'Eventos por mes',fmt:v=>nf.format(v)})+ '</div>';
+    '<div class="mini"><h4>Sesiones</h4>'+spark(buildSeries('sessions'),{label:'Sesiones por mes',fmt:v=>nf.format(v)})+ '</div>'+
+    '<div class="mini"><h4>Clics WhatsApp</h4>'+spark(buildSeries('clicks'),{label:'Clics WhatsApp por mes',fmt:v=>nf.format(v)})+ '</div>'+
+    '<div class="mini"><h4>%CR total</h4>'+spark(buildSeries('cr'),{label:'Conversión proxy por mes',fmt:v=>pct(v)})+ '</div>';
 }
-
-/* ---------- historic table ---------- */
 function renderHist(){
   const rows=M.map(m=>{
-    const st=m.period&&['jun-26','jul-26','ago-26'].includes(m.period)?'<span class="pill ok">Ref</span>':'';
-    const sts=m.status==='REVISAR'?'<span class="pill warn">REVISAR</span>':'<span class="pill obs">Observado</span>';
-    return '<tr><td>'+fmtMonth(m.period)+' '+(m.period&&['jun-26','jul-26','ago-26'].includes(m.period)?'<span class="pill ok">Ref</span>':'')+'</td><td>'+sts+'</td><td>'+nf.format(m.sessions)+'</td><td>'+nf.format(m.engaged)+'</td><td>'+pct(m.eRate)+'</td><td>'+nf.format(m.events)+'</td><td>'+nf.format(m.keyEvents)+'</td><td>'+pct(m.keyEvents/m.sessions)+'</td><td>'+nf.format(m.dur)+'</td><td>'+nf.format(m.routes)+'</td></tr>';
+    const sts=m.period==='jun-26'?'<span class="pill warn">REVISAR</span>':'<span class="pill obs">Obs</span>';
+    const ref=['jun-26','jul-26','ago-26'].includes(m.period)?' <span class="pill ok">Ref</span>':'';
+    return '<tr><td>'+fmtMonth(m.period)+ref+'</td><td>'+sts+'</td><td>'+nf.format(m.sesD)+'</td><td>'+nf.format(m.sesO)+'</td><td>'+nf.format(m.sesT)+'</td><td>'+nf.format(m.clkD)+'</td><td>'+nf.format(m.clkO)+'</td><td>'+(m.period==='jun-26'?'<span class="pill warn">'+nf.format(m.clkT)+'</span>':nf.format(m.clkT))+'</td><td>'+pct(m.crD)+'</td><td>'+pct(m.crO)+'</td><td>'+pct(m.crT)+'</td></tr>';
   }).join('');
   $('#tbl-hist').innerHTML=rows;
-  const tot={s:M.reduce((a,b)=>a+b.sessions,0),e:M.reduce((a,b)=>a+b.engaged,0),ev:M.reduce((a,b)=>a+b.events,0),k:M.reduce((a,b)=>a+b.keyEvents,0)};
-  $('#tbl-hist-foot').innerHTML='<tr><td>Total / prom.</td><td></td><td>'+nf.format(tot.s)+'</td><td>'+nf.format(tot.e)+'</td><td>'+pct(tot.e/tot.s)+'</td><td>'+nf.format(tot.ev)+'</td><td>'+nf.format(tot.k)+'</td><td>'+pct(tot.k/tot.s)+'</td><td>—</td><td>—</td></tr>';
+  const tot={sd:M.reduce((a,b)=>a+b.sesD,0),so:M.reduce((a,b)=>a+b.sesO,0),st:M.reduce((a,b)=>a+b.sesT,0),cd:M.reduce((a,b)=>a+b.clkD,0),co:M.reduce((a,b)=>a+b.clkO,0),ct:M.reduce((a,b)=>a+b.clkT,0)};
+  $('#tbl-hist-foot').innerHTML='<tr><td>Total 20m</td><td>—</td><td>'+nf.format(tot.sd)+'</td><td>'+nf.format(tot.so)+'</td><td>'+nf.format(tot.st)+'</td><td>'+nf.format(tot.cd)+'</td><td>'+nf.format(tot.co)+'</td><td>'+nf.format(tot.ct)+'</td><td>'+pct(tot.cd/tot.sd)+'</td><td>'+pct(tot.co/tot.so)+'</td><td>'+pct(tot.ct/tot.st)+'</td></tr>';
 }
-
-/* ---------- plan cards ---------- */
 function renderPlan(){
-  const c=compute();
+  const c=compute(); const FUT=['sep-26','oct-26','nov-26','dic-26'];
   $('#plan-cards').innerHTML=FUT.map(per=>{
-    const delta=c.ek-refKey;
-    const dir=delta>=0?' +'+nf.format(delta):' '+nf.format(delta);
-    const cls=delta>=0?'ok':'err';
+    const d=c.clkT-REF_CLK_MES; const cls=d>=0?'ok':'err';
+    const dir=(d>=0?'+':'')+nf.format(Math.round(d));
     return '<div class="card kpi"><div class="label">'+fmtMonth(per)+'</div>'+
-      '<div class="v" style="font-size:30px">'+nf1.format(Math.round(c.ek*10)/10)+'</div>'+
-      '<div class="note">EK proyectados · '+nf.format(Math.round(c.ses))+' sesiones · vs ref. '+nf.format(Math.round(refKey/3))+' EK/mes</div>'+
-      '<div style="margin-top:10px"><span class="pill '+cls+'">'+dir+' vs referencia</span></div></div>';
+      '<div class="v" style="font-size:30px">'+nf.format(Math.round(c.clkT))+'</div>'+
+      '<div class="note">clics WA · '+nf.format(Math.round(c.ses))+' sesiones · %CR '+pct(c.crEff)+'</div>'+
+      '<div style="margin-top:10px"><span class="pill '+cls+'">'+dir+' vs ref </span></div></div>';
   }).join('');
+  $('#ref-line').textContent=nf.format(Math.round(REF_CLK_MES))+' clics/mes';
 }
-
-/* ---------- channel bars ---------- */
-function chanAgg(periods){
-  const rows=CH.filter(r=>periods.includes(r.period));
-  const agg={}; rows.forEach(r=>{ if(!agg[r.channel])agg[r.channel]={s:0,k:0,e:0}; agg[r.channel].s+=r.sessions; agg[r.channel].k+=r.keyEvents; agg[r.channel].e+=r.events; });
-  const arr=Object.entries(agg).map(([ch,v])=>({ch,s:v.s,k:v.k})).sort((a,b)=>b.s-a.s);
-  return arr;
-}
-function renderChannels(){
-  const refAgg=chanAgg(REF);
-  const totS=refAgg.reduce((a,b)=>a+b.s,0);
-  const refKEmap={}; refAgg.forEach(x=>{refKEmap[x.ch]=x.s>0?x.k/x.s:0;});
+function renderStruct(){
   const c=compute();
-  $('#bars-mix').innerHTML= refAgg.map(x=>{
-    const share=x.s/totS;
-    return '<div class="bar-row"><span>'+x.ch+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,share*100)+'%"></div></div><span class="bar-val">'+pct(share)+'</span></div>';
-  }).join('');
-  $('#bars-channel').innerHTML= refAgg.map(x=>{
-    const share=x.s/totS;
-    const sesSc=c.ses*share;
-    const ekSc=sesSc*refKEmap[x.ch];
-    const share2=(x.s/totS*100).toFixed(1);
-    return '<div class="bar-row"><span>'+x.ch+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,share*100)+'%"></div></div><span class="bar-val">'+nf1.format(ekSc)+' EK</span></div>';
-  }).join('');
+  $('#bars-ses').innerHTML=[
+    ['Direct',c.sesD],['Organic Search',c.sesO]
+  ].map(x=>'<div class="bar-row"><span>'+x[0]+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,x[1]/c.ses*100)+'%"></div></div><span class="bar-val">'+nf.format(Math.round(x[1]))+'</span></div>').join('');
+  $('#bars-clk').innerHTML=[
+    ['Direct',c.clkD],['Organic Search',c.clkO]
+  ].map(x=>'<div class="bar-row"><span>'+x[0]+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,x[1]/(c.clkT||1)*100)+'%"></div></div><span class="bar-val">'+nf.format(Math.round(x[1]))+'</span></div>').join('');
 }
-
-/* ---------- table: mix & channel ---------- */
-function renderTables(){
-  const totS=M.reduce((a,b)=>a+b.sessions,0), totK=M.reduce((a,b)=>a+b.keyEvents,0);
-  const agg={}; CH.forEach(r=>{if(!agg[r.channel])agg[r.channel]={s:0,k:0};agg[r.channel].s+=r.sessions;agg[r.channel].k+=r.keyEvents;});
-  const arr=Object.entries(agg).map(([ch,v])=>({ch,s:v.s,k:v.k})).sort((a,b)=>b.s-a.s);
-  $('#c-ncan').textContent=new Set(CH.map(r=>r.channel)).size;
-  const ps=arr.find(x=>x.ch==='Paid Search');
-  $('#c-ps').textContent=pct(ps.s/totS);
-  $('#c-pske').textContent=pct(ps.k/totK);
-  $('#tbl-mix').innerHTML=arr.map(x=>'<tr><td>'+x.ch+'</td><td>'+nf.format(x.s)+'</td><td>'+pct(x.s/totS)+'</td><td>'+nf.format(x.k)+'</td><td>'+pct(x.k/totK)+'</td><td>'+pct(x.k/x.s)+'</td></tr>').join('');
-  $('#tbl-channel').innerHTML=CH.slice().sort((a,b)=>b.period.localeCompare(a.period)).map(r=>'<tr><td>'+fmtMonth(r.period)+'</td><td>'+r.channel+'</td><td>'+nf.format(r.sessions)+'</td><td>'+nf.format(r.engaged)+'</td><td>'+pct(r.eRate)+'</td><td>'+nf.format(r.events)+'</td><td>'+nf.format(r.keyEvents)+'</td><td>'+pct(r.keyRate)+'</td></tr>').join('');
-}
-
-/* ---------- seasonal profile ---------- */
-function renderSeason(){
-  const map={}; M.forEach(m=>{ const mname=m.period.slice(4); const mn=m.period.slice(0,3); if(!map[mn])map[mn]={s:0,k:0,n:0}; map[mn].s+=m.sessions; map[mn].k+=m.keyEvents; map[mn].n++; });
-  const order=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  $('#season-cards').innerHTML=order.map(mn=>{
-    const o=map[mn]; if(!o) return '<div class="season-card"><b>'+mn.toUpperCase()+'</b><span>sin dato</span></div>';
-    return '<div class="season-card"><b>'+mn.toUpperCase()+'</b><span>'+nf.format(Math.round(o.s/o.n))+' ses.</span><div class="rate">'+pct(o.k/o.s)+' EK</div><span>n='+o.n+'</span></div>';
-  }).join('');
-}
-
-/* ---------- hallazgos & palancas ---------- */
 function renderDiag(){
-  const totalS=M.reduce((a,b)=>a+b.sessions,0), totalK=M.reduce((a,b)=>a+b.keyEvents,0);
+  const totS=M.reduce((a,b)=>a+b.sesT,0), totC=M.reduce((a,b)=>a+b.clkT,0);
   const h=[
-    ['1 · Paid Search sostiene la adquisición', 'Paid Search concentra 67.3% de las sesiones ('+nf.format(341533)+' de '+nf.format(totalS)+') y 74.9% de los eventos clave ('+nf.format(78244)+' de '+nf.format(totalK)+'). El pico de sesiones es feb-25 ('+nf.format(43458)+'), con 32,345 sesiones de Paid Search.' ],
-    ['2 · La conversión proxy se duplica en 2026', 'Eventos clave por sesión pasa de '+pct(55272/327792)+' en 2025 (55,272 EK / 327,792 ses.) a '+pct(49192/180011)+' en 2026 (49,192 / 180,011). Dirigir más tráfico ya rinde mejor por sesión: la palanca de eficiencia gana peso.' ],
-    ['3 · Febrero y marzo 2026 son una anomalía estructural', 'Cardinalidad de rutas 12.7x y 8.9x sobre la mediana (3,682 y 2,578 rutas), concentrada en Direct con baja interacción (14.7% y 22.5%). El propio archivo los marca REVISAR. No son comparables para baseline.' ],
-    ['4 · Junio 2026 es el mejor mes de conversión proxy', 'Máximo mensual: '+pct(MAX_TAS)+' de eventos clave por sesión ('+nf.format(8904)+' EK en jun-26 sobre '+nf.format(19797)+' sesiones). La tasa promedio de referencia jun–ago 26 es '+pct(REF_KE)+'.' ],
-    ['5 · Noviembre 2025 se hunde en conversión proxy', 'nov-25: '+pct(0.0557)+' EK/sesión ('+nf.format(1862)+' EK). Es el mínimo del periodo y sugiere un patrón estacional de cierre de año que el plan debe considerar antes de escalar inversión en noviembre.' ],
-    ['6 · Los ingresos GA4 son cero en todo el histórico', 'Creatividad completa de 20,618 filas arroja total de ingresos 0. Sin capa de ventas no se puede estimar CAC, ROAS ni retorno: la conversión proxy es el techo de evidencia disponible.' ],
-    ['7 · Cobertura incompleta: falta setiembre 2026', 'El histórico solicitado va a sep-26 pero la exportación termina en ago-26. El simulador modela sep-dic 26 como escenario condicionado; para cerrar ene–sep 2026 se requiere la exportación completa de setiembre.' ]
+    ['1 · Direct concentra los clics WhatsApp aunque minora en sesiones', 'En jun–ago 26 Direct aporta 73.7% de los clics ('+nf.format(refClkD)+' de '+nf.format(refClkT)+') con solo 35.4% de las sesiones. Su %CR mediano es '+pct(CR_D)+' frente a '+pct(CR_O)+' de Organic Search.' ],
+    ['2 · Organic Search es la base estable de sesiones', '64.6% de las sesiones del periodo de referencia ('+nf.format(refSesO)+' de '+nf.format(refSesT)+') llega por Organic con %CR estable 4.1–11.3%. Su conversión es baja pero predecible.' ],
+    ['3 · Las sesiones caen en 2026 y los clics crecen', 'Promedio mensual de sesiones: '+nf.format(7965)+' en 2025 vs '+nf.format(7075)+' en 2026 (-11.2%), mientras los clics WhatsApp pasan de '+nf.format(1161)+' a '+nf.format(1240)+' (+6.8%). La relación +%CR sostiene los clics.' ],
+    ['4 · Junio 2026 es una inconsistencia a revisar', '%CR Direct de '+pct(1.002834)+': 1,769 clics sobre 1,764 sesiones. El propio archivo lo permite en serie pero supera el límite racional; queda excluido de la tasa Direct de referencia.' ],
+    ['5 · El %CR total oscila fuerte en Direct', 'Rango observado '+pct(0.0636)+' – '+pct(1.002834)+' en Direct; Organic oscila '+pct(0.04101)+' – '+pct(0.112817)+'. La dispersión Direct domina la serie de conversión total.' ],
+    ['6 · La conversión proxy global mejora', 'Pool 2025: '+pct(13931/95579)+' (13,931 clics / 95,579 sesiones). Pool 2026 (8 meses): '+pct(9922/56598)+'. Sube la relación de clics por sesión en 2026.' ],
+    ['7 · Cobertura incompleta: falta setiembre 2026', 'El histórico solicitado va a sep-26 pero la hoja termina en ago-26. El simulador modela sep-dic 26 como escenario condicionado.' ]
   ];
   $('#hallazgos').innerHTML=h.map(x=>'<div class="hallazgo"><strong>'+x[0]+'</strong><p>'+x[1]+'</p></div>').join('');
-  const now='evidencia localizada en hoja «Tendencia mensual»/«Canal mensual»; extracción 2026-09-15';
   const p=[
-    ['A','Priorizar Paid Search como motor de adquisición','Obj: sostener el canal dominante. Evidencia: hallazgo 1 (67.3% sesiones, 74.9% EK). Acción: mantener o incrementar el share de sesiones de Paid Search antes de reasignar a canales minoritarios. KPI: share de eventos clave por canal.','Esfuerzo bajo','Horizonte 1-2 ciclos','Confianza media-alta','Riesgo: cambio de puja/estacionalidad'],
-    ['B','Explotar la ganancia de eficiencia 2026','Obj: convertir más EK por sesión. Evidencia: hallazgo 2 (16.9%→27.3%). Acción: usar presets +25%/+50% de este simulador para presupuestar; validar con experimento sin reasignación brusca. KPI: EK/sesión mensual.','Esfuerzo medio','Horizonte 2-3 meses','Confianza media','Riesgo: regresión a la media'],
-    ['C','Limpieza y control de calidad feb–mar 2026','Obj: habilitar esos meses como comparable. Evidencia: hallazgo 3. Acción: auditar causa de la cardinalidad Direct e interacción baja; definir si es marcación o cambio de landing. KPI: rutas/mes y % de interacción Direct.','Esfuerzo medio','Horizonte 1 ciclo','Confianza alta en la detección','Riesgo: indeterminación de causa'],
-    ['D','Programar noviembre como mes de riesgo','Obj: evitar caída de conversión al escalar. Evidencia: hallazgo 5 (nov-25 mínimo). Acción: planificar nov-26 contra escenario +25%/+50% y meta de EK, no contra continuidad. KPI: EK/sesión en nov-26.','Esfuerzo bajo','Horizonte previo a nov','Confianza media-alta','Riesgo: estacionalidad no modelada']
+    ['A','Explotar Direct como motor de clics WhatsApp','Obj: mantener la conversión alta por sesión. Evidencia: hallazgos 1 y 4. Acción: validar el %CR Direct (los picos &gt;100% son señal de medición); usar preset +25%/+50% con Reservas. KPI: %CR Direct mensual y clics Direct.','Esfuerzo bajo','Horizonte 1-2 ciclos','Confianza media','Riesgo: anomalías de tracking'],
+    ['B','Subir la conversión orgánica','Obj: convertir la base estable de sesiones. Evidencia: hallazgo 2 (%CR Organic '+pct(CR_O)+'). Acción: mejorar CTAs/landing de tráfico orgánico hacia WhatsApp; medir %CR orgánico. KPI: %CR Organic y clics orgánicos.','Esfuerzo medio','Horizonte 2-3 meses','Confianza media-alta','Riesgo: estacionalidad'],
+    ['C','Depurar junio 2026 antes de integrar','Obj: quitar la distorsión de la serie. Evidencia: hallazgo 4. Acción: auditar el evento de clic WhatsApp en Direct para jun-26 antes de reportar totales. KPI: consistencia clics ≤ sesiones.','Esfuerzo medio','Horizonte 1 ciclo','Confianza alta en la detección','Riesgo: indeterminación de causa'],
+    ['D','Completar cobertura','Obj: habilitar ene–sep 26 con dato real. Evidencia: hallazgo 7. Acción: conseguir la DATA DASH de sep-26 y regenerar el escenario. KPI: 21 periodos con dato.','Esfuerzo bajo','Horizonte previo al cierre','Confianza alta','Riesgo: retraso de fuente']
   ];
   $('#palancas').innerHTML=p.map(x=>'<div class="palanca"><h4>Palanca '+x[0]+' · '+x[1]+'</h4><p style="font-size:13px;color:var(--muted);margin:0">'+x[2]+'</p><div class="kv">'+x.slice(3).map(s=>'<span>'+s+'</span>').join('')+'</div></div>').join('');
+}
+
+/* ---------- equivalencias entre pestañas ---------- */
+function renderEquiv(){
+  const CM=EQ_CM, TR=EQ_TR;
+  let upSes=0,upClk=0;
+  const rows=M.map(m=>{
+    const c=CM.get(m.period)||{sesD:0,sesO:0,clkD:0,clkO:0};
+    const t=TR.get(m.period)||{ses:0,kev:0};
+    const dSes=c.sesD+c.sesO, dClk=m.clkD+m.clkO, cClk=c.clkD+c.clkO;
+    const delSes=dSes-m.sesT, delClk=cClk-dClk;
+    if(delSes===0)upSes++;
+    if(delClk===0)upClk++;
+    const cov=t.ses>0?dSes/t.ses:0;
+    const warn=m.period==='jun-26'?' <span class="pill warn">REVISAR</span>':'';
+    return '<tr><td>'+fmtMonth(m.period)+warn+'</td>'+
+      '<td>'+nf.format(m.sesT)+'</td><td>'+nf.format(dSes)+'</td><td>'+(delSes===0?'<span class="pill ok">0</span>':'<span class="pill warn">'+nf.format(delSes)+'</span>')+'</td>'+
+      '<td>'+nf.format(dClk)+'</td><td>'+nf.format(cClk)+'</td><td>'+(delClk===0?'<span class="pill ok">0</span>':'<span class="pill warn">'+nf.format(delClk)+'</span>')+'</td>'+
+      '<td>'+nf.format(t.ses)+'</td><td>'+pct(cov,0)+'</td></tr>';
+  }).join('');
+  $('#tbl-equiv').innerHTML=rows;
+  const y25=M.filter(x=>x.period.endsWith('-25')).reduce((a,m)=>a+m.clkT,0);
+  const y26=M.filter(x=>x.period.endsWith('-26')).reduce((a,m)=>a+m.clkT,0);
+  const okEquiv=(y25===CMP.hoja1[0]&&y26===CMP.hoja1[1]&&upSes===M.length&&upClk===M.length);
+  $('#equiv-kpis').innerHTML=
+    '<div class="card kpi"><div class="label">Sesiones equivalentes</div><div class="v">'+upSes+'/'+M.length+'</div><div class="note">DATA DASH vs Canal mensual</div></div>'+
+    '<div class="card kpi"><div class="label">Clics ≡ Eventos clave</div><div class="v">'+upClk+'/'+M.length+'</div><div class="note">DATA DASH vs Canal / Tendencia</div></div>'+
+    '<div class="card kpi"><div class="label">Pivote Hoja1 2025</div><div class="v">'+nf.format(y25)+'</div><div class="note">vs '+nf.format(CMP.hoja1[0])+' en «Suma de Eventos clave»</div></div>'+
+    '<div class="card kpi"><div class="label">Pivote Hoja1 2026</div><div class="v">'+nf.format(y26)+'</div><div class="note">vs '+nf.format(CMP.hoja1[1])+' en «Suma de Eventos clave»</div></div>';
+  const v=$('#equiv-verdict');
+  v.className='badge '+(okEquiv?'ok':'');
+  v.textContent=okEquiv?'Equivalencias verificadas 20/20':'Verificación con diferencias';
+  const covRows=M.map(m=>{const d=m.sesD+m.sesO;const t=(TR.get(m.period)||{ses:0}).ses;return [m.period,d,Math.max(t-d,0)];});
+  const maxT=Math.max(...covRows.map(r=>r[1]+r[2]));
+  $('#bars-cov').innerHTML=covRows.map(r=>'<div class="bar-row"><span>'+fmtMonth(r[0])+'</span><div class="bar-track"><div class="seg" style="width:'+Math.round(r[1]/maxT*100)+'%;background:var(--blue-dark)"></div><div class="seg" style="width:'+Math.round(r[2]/maxT*100)+'%;background:#d8d3e8"></div></div><span class="bar-val">'+nf.format(r[1])+'</span></div>').join('');
+  const kevRows=M.map(m=>{const t=(TR.get(m.period)||{kev:0}).kev;return [m.period,m.clkT,Math.max(t-m.clkT,0)];});
+  const maxK=Math.max(...kevRows.map(r=>r[1]+r[2]));
+  $('#bars-evk').innerHTML=kevRows.map(r=>'<div class="bar-row"><span>'+fmtMonth(r[0])+'</span><div class="bar-track"><div class="seg" style="width:'+Math.round(r[1]/maxK*100)+'%;background:var(--blue-dark)"></div><div class="seg" style="width:'+Math.round(r[2]/maxK*100)+'%;background:#d8d3e8"></div></div><span class="bar-val">'+nf.format(r[1])+'</span></div>').join('');
+  const mapRows=[
+    ['Sesiones por ruta (proxy)','Sesiones (DATA DASH, Direct + Organic Search)','<span class="pill ok">Coincide 20/20</span> — misma fuente de sesiones'],
+    ['Con interacción (proxy)','Sesiones con interacción (GA4)','<span class="pill mod">No contrastado</span> — fuera del alcance de la DATA DASH'],
+    ['Eventos/sesión (proxy)','Eventos ÷ sesiones','<span class="pill obs">Observado</span> — derivada de la propia serie'],
+    ['Eventos clave','Clics a WhatsApp (DATA DASH)','<span class="pill ok">Igual 20/20</span> — inferencia: los clics WA se registran como eventos clave'],
+    ['Tasa de evento clave de sesión','%CR = Clics WA ÷ sesiones','<span class="pill obs">Observado</span> — misma métrica acotada a Direct + Organic'],
+    ['Tráfico total (Tendencia mensual)','Fuera de la DATA DASH (Paid Search y otros)','<span class="pill warn">Cobertura parcial</span> — la DASH cubre 23–39% del tráfico']
+  ];
+  $('#tbl-equiv-map').innerHTML=mapRows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('');
 }
 
 /* ---------- xlsx ---------- */
 function crcTable(){let t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;}
 const CRC=crcTable();
 function crc32(buf){let c=0xFFFFFFFF;for(let i=0;i<buf.length;i++)c=CRC[(c^buf[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
-function ztime(){return 0;} // dos time 0 ok
 function zipStore(files){
   const enc=new TextEncoder();
   const out=[]; const cd=[]; let offset=0;
@@ -674,8 +687,6 @@ function zipStore(files){
   return buf;
 }
 function sxml(rows){
-  let x='<c r="A1" t="inlineStr"><is><t>Simulador Motorex GA4</t></is></c>';
-  // build sheetData
   const esc=(s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   let cells='';
   rows.forEach((r,ri)=>{
@@ -690,7 +701,7 @@ function sxml(rows){
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+cells+'</sheetData></worksheet>';
 }
 function makeXlsx(sheets){
-  const ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet4.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>';
+  const ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+sheets.map((s,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'</Types>';
   const rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
   const wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((s,i)=>'<sheet name="'+s.name+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>';
   const wbrels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((s,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'</Relationships>';
@@ -707,68 +718,45 @@ function makeXlsx(sheets){
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
 function downloadXlsx(){
   const c=compute(); const month=$('#sel-month').value;
-  const c1=[['Simulador Motorex GA4 · Adquisición web',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir con cliente sin aprobación humana'],['Extracción', '2026-09-15']];
-  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Eventos clave/sesión (proxy)',+c.tasa.toFixed(4)],['Sesiones con interacción',+c.inter.toFixed(4)],['Inversión hipotética S/',c.inv],['Eventos clave proyectados',+c.ek.toFixed(1)],['Sesiones con interacción',Math.round(c.interSes)],['Eventos totales estimados',Math.round(c.evt)],['Costo por EK hipotético S/',+c.cpk.toFixed(2)],['Tráfico con interacción por EK',+c.traf.toFixed(2)]];
-  const hist=[['Mes','Sesiones','Ses. con interacción','Eventos','Eventos clave','EK/sesión','Estado']].concat(M.map(m=>[fmtMonth(m.period),m.sessions,m.engaged,m.events,m.keyEvents,+m.keyRate.toFixed(4),m.status]));
-  const plan=[['Mes','EK proyectados','Sesiones','Tasa EK']].concat(FUT.map(per=>[fmtMonth(per),+c.ek.toFixed(1),Math.round(c.ses),+c.tasa.toFixed(4)]));
-  const ch=[['Canal','Sesiones ref.','Eventos clave ref.']].concat(chanAgg(REF).map(x=>[x.ch,x.s,x.k]));
-  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'Histórico',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  dl(blob,'motorex_simulador_'+month+'.xlsx');
+  const c1=[['Simulador Motorex GA4 · DATA DASH',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir sin aprobación humana'],['Extracción','2026-09-15']];
+  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Share Direct (jun-ago 26)',+SHARE_D.toFixed(4)],['Share Organic (jun-ago 26)',+SHARE_O.toFixed(4)],['%CR Direct aplicado',+c.crD.toFixed(4)],['%CR Organic aplicado',+c.crO.toFixed(4)],['Clics WA Direct',Math.round(c.clkD)],['Clics WA Organic',Math.round(c.clkO)],['Clics WA totales',Math.round(c.clkT)],['%CR efectiva',+c.crEff.toFixed(4)],['Referencia clics/mes (jun-ago 26)',Math.round(REF_CLK_MES)]];
+  const hist=[['Mes','Ses Direct','Ses Organic','Ses Total','Cl WA Direct','Cl WA Organic','Cl WA Total','%CR Direct','%CR Organic','%CR Total']].concat(M.map(m=>[fmtMonth(m.period),m.sesD,m.sesO,m.sesT,m.clkD,m.clkO,m.clkT,+m.crD.toFixed(4),+m.crO.toFixed(4),+m.crT.toFixed(4)]));
+  const plan=[['Mes','Clics WA proyectados','Sesiones','%CR efectiva']].concat(['sep-26','oct-26','nov-26','dic-26'].map(per=>[fmtMonth(per),Math.round(c.clkT),Math.round(c.ses),+c.crEff.toFixed(4)]));
+  const ch=[['Canal','Sesiones ref (jun-ago 26)','Clics ref','%CR ref'],['Direct',refSesD,refClkD,+CR_D.toFixed(4)],['Organic Search',refSesO,refClkO,+CR_O.toFixed(4)],['Total',refSesT,refClkT,+c.crEff.toFixed(4)]];
+  const eqv=[['Mes','Ses DATA DASH','Ses Canal (Dir+Org)','Δ ses','Cl WA DASH','Ev. clave Canal','Δ clk','Ses Tendencia','Cobertura DASH']].concat(M.map(m=>{const t=EQ_TR.get(m.period);return[fmtMonth(m.period),m.sesT,+(m.sesD+m.sesO),+(m.sesT-(m.sesD+m.sesO)),m.clkT,+(m.clkD+m.clkO),+(m.clkT-(m.clkD+m.clkO)),(t?t.ses:''),+(m.sesT/(t?t.ses:1)).toFixed(4)]})).concat([['Total 20m',EQ_TOT.sesD+EQ_TOT.sesO,EQ_TOT.sesD+EQ_TOT.sesO,0,EQ_TOT.clkD+EQ_TOT.clkO,EQ_TOT.clkD+EQ_TOT.clkO,0,0,0]]);
+  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'DATA DASH',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch},{name:'Equivalencias',rows:eqv}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  dl(blob,'motorex_data_dash_'+month+'.xlsx');
 }
 
 /* ---------- init ---------- */
 function bind(){
-  const syncSes=(v)=>{$('#in-ses').value=v;$('#rg-ses').value=v;renderAll();};
-  $('#in-ses').addEventListener('input',e=>{renderAll();});
+  $('#in-ses').addEventListener('input',()=>renderAll());
   $('#rg-ses').addEventListener('input',e=>{$('#in-ses').value=e.target.value;renderAll();});
-  $('#in-tas').addEventListener('input',e=>{markManual();renderAll();});
-  $('#rg-tas').addEventListener('input',e=>{markManual();$('#in-tas').value=e.target.value;renderAll();});
-  $('#in-int').addEventListener('input',e=>{markManual();renderAll();});
-  $('#in-inv').addEventListener('input',e=>{renderAll();});
-  $('#sel-month').addEventListener('change',e=>{renderAll();});
+  $('#in-cr-d').addEventListener('input',()=>{renderAll();});
+  $('#in-cr-o').addEventListener('input',()=>{renderAll();});
+  $('#sel-month').addEventListener('change',()=>renderAll());
   $('#presets').addEventListener('click',e=>{
     const b=e.target.closest('.preset-btn'); if(!b)return;
-    if(b.dataset.preset==='null'){ markManual(); return; }
+    if(b.dataset.preset==='null'){ markManual(); renderAll(); return; }
     setPreset(b.dataset.preset); renderAll();
   });
   $('#btn-reset').addEventListener('click',()=>{
-    st.manual=false; setPreset('25'); st.sessions=Math.round(refSessions/3); st.tasa=REF_KE*100;
-    $('#in-ses').value=st.sessions; $('#rg-ses').value=st.sessions;
-    $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
-    $('#in-int').value=round1(REF_INT*100); $('#in-inv').value=0; renderAll();
+    st.manual=false; setPreset('25'); st.sessions=REF_SES_MES;
+    $('#in-ses').value=Math.round(REF_SES_MES); $('#rg-ses').value=Math.round(REF_SES_MES);
+    $('#in-cr-d').value=(CR_D*100).toFixed(1); $('#in-cr-o').value=(CR_O*100).toFixed(1);
+    renderAll();
   });
   $('#btn-xlsx').addEventListener('click',downloadXlsx);
-  /* tabs */
-  const tabs=[['tab-proy','panel-proy'],['tab-can','panel-can']];
-  tabs.forEach(([tb,pb])=>{
-    $('#'+tb).addEventListener('click',()=>{
-      tabs.forEach(([t2,p2])=>{ $('#'+t2).setAttribute('aria-selected','false'); $('#'+p2).hidden=(p2!==pb); });
-      $('#'+tb).setAttribute('aria-selected','true');
-    });
-    $('#'+tb).addEventListener('keydown',e=>{
-      const i=tabs.findIndex(t=>t[0]===tb); let n=null;
-      if(e.key==='ArrowRight')n=(i+1)%tabs.length; if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;
-      if(n!==null){e.preventDefault();tabs[n].forEach(x=>{}); $('#'+tabs[n][0]).click(); $('#'+tabs[n][0]).focus();}
-    });
-  });
 }
-function renderAll(){
-  renderRes(); renderHist(); renderSeason(); renderDiag();
-  renderTables(); renderChannels();
-}
+function renderAll(){ renderRes(); renderHist(); renderStruct(); renderDiag(); renderEquiv(); }
 function setDefaults(){
-  st.sessions=Math.round(refSessions/3); st.tasa=REF_KE*100; st.int=REF_INT*100; st.inv=0;
-  $('#in-ses').value=st.sessions; $('#rg-ses').value=st.sessions;
-  $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
-  $('#in-int').value=round1(st.int); $('#in-inv').value=0;
-  $('#hint-ses').textContent=nf.format(Math.round(refSessions/3))+' ses/mes promedio (jun–ago 26)';
-  $('#hint-tas').textContent=pct(REF_KE)+' · max '+pct(MAX_TAS);
-  $('#max-tas').textContent=pct(MAX_TAS);
-  $('#hint-int').textContent=pct(REF_INT);
-  /* url preset */
+  st.sessions=REF_SES_MES;
+  $('#in-ses').value=Math.round(REF_SES_MES); $('#rg-ses').value=Math.round(REF_SES_MES);
+  $('#in-cr-d').value=(CR_D*100).toFixed(1); $('#in-cr-o').value=(CR_O*100).toFixed(1);
+  $('#hint-ses').textContent=nf.format(Math.round(REF_SES_MES))+' ses/mes promedio (jun–ago 26)';
   const u=new URLSearchParams(location.search);
   const p=u.get('preset'); if(p==='plus25')setPreset('25'); else if(p==='plus50')setPreset('50'); else if(p==='base')setPreset('0'); else setPreset('25');
-  const m=u.get('month'); if(FUT.includes(m))$('#sel-month').value=m;
+  const m=u.get('month'); if(['sep-26','oct-26','nov-26','dic-26'].includes(m))$('#sel-month').value=m;
 }
 setDefaults();
 bind();
