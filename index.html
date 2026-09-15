@@ -101,10 +101,15 @@ section{padding:34px 0;border-top:1px solid var(--line)}
 .chancard .ch{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-dark)}
 .chancard .cv{font-size:clamp(18px,2.6vw,24px);font-weight:800;margin:4px 0 2px}
 .chancard .cd{font-size:11px;color:var(--muted)}
+.chancard .cd.sim{color:#8b4d8f;font-weight:600;margin-top:2px}
 .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
 .chip{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600}
+.chip.sim-chip{background:#f3e8f4;border-color:rgba(139,77,143,.35);color:#8b4d8f}
 .chip b{color:var(--blue-dark)}
+.chip.sim-chip b{color:#8b4d8f}
 .flow .op{color:var(--pink);font-weight:800}
+.flow .op:nth-of-type(10),.flow .op:nth-of-type(11){color:#8b4d8f}
+.note.sim{color:#8b4d8f}
 .decision{margin-top:14px;padding:14px 16px;border-left:4px solid var(--blue-dark);background:var(--panel);border-radius:0 12px 12px 0}
 .decision h3{margin:0 0 6px;font-size:14px}
 .decision p{margin:0;font-size:13px;color:var(--muted)}
@@ -245,6 +250,15 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
             </div>
           </div>
         </div>
+
+        <div class="ctrl">
+          <label>Etapa comercial · % de embudo (simulación)</label>
+          <div class="mrow">
+            <div><label for="in-l2l" style="font-size:11px">Clic WA → Lead efectivo (%)</label><input type="number" id="in-l2l" min="0" max="100" step="1" value="50"></div>
+            <div><label for="in-l2v" style="font-size:11px">Lead → Venta (%)</label><input type="number" id="in-l2v" min="0" max="100" step="1" value="20"></div>
+          </div>
+          <div class="hint"><span class="pill warn">Supuesto</span> La fuente GA4 de Motorex no registra clic→lead ni lead→venta (termina en «Eventos clave»/clics WA; ingresos GA4 = 0). Estos % construyen el <b>volumen simulado</b>, no son datos observados.</div>
+        </div>
       </div>
 
       <!-- RESULTADOS -->
@@ -267,6 +281,12 @@ details code{background:var(--panel);border:1px solid var(--line);padding:1px 6p
             <div class="card kpi"><div class="label">Sesiones</div><div class="v" id="k-ses">—</div></div>
             <div class="card kpi"><div class="label">Delta vs referencia</div><div class="v" id="k-delta" style="font-size:20px">—</div><div class="note" id="k-delta-note">clics/mes ref. jun–ago 26</div></div>
             <div class="card kpi"><div class="label">Distribución</div><div class="v" id="k-mix" style="font-size:16px">—</div></div>
+          </div>
+
+          <div class="kpirow" style="margin-top:12px">
+            <div class="card kpi"><div class="label">Leads efectivos <span class="pill warn">SIM</span></div><div class="v" id="k-leads">—</div><div class="note" id="k-l2l-note">clics × %Clic→Lead</div></div>
+            <div class="card kpi"><div class="label">Ventas <span class="pill warn">SIM</span></div><div class="v" id="k-sales">—</div><div class="note" id="k-l2v-note">leads × %Lead→Venta</div></div>
+            <div class="card kpi"><div class="label">Ventas ÷ sesiones</div><div class="v" id="k-funnel" style="font-size:18px">—</div><div class="note">eficiencia de embudo completa</div></div>
           </div>
 
           <div class="chancards">
@@ -483,11 +503,16 @@ function effectiveCrs(){
 function compute(){
   const ses=+$('#in-ses').value||0;
   const {d,o}=effectiveCrs();
+  const l2l=(+$('#in-l2l').value||0)/100, l2v=(+$('#in-l2v').value||0)/100;
   const sesD=ses*SHARE_D, sesO=ses*SHARE_O;
   const clkD=sesD*d, clkO=sesO*o, clkT=clkD+clkO;
+  const lvD=clkD*l2l, lvO=clkO*l2l, lvT=lvD+lvO;
+  const saD=lvD*l2v, saO=lvO*l2v, saT=saD+saO;
   const crEff=ses>0?clkT/ses:0;
+  const lvEff=ses>0?lvT/ses:0;
+  const saEff=ses>0?saT/ses:0;
   const delta=clkT-REF_CLK_MES;
-  return {ses,sesD,sesO,clkD,clkO,clkT,crD:d,crO:o,crEff,delta};
+  return {ses,sesD,sesO,clkD,clkO,clkT,l2l,l2v,lvD,lvO,lvT,saD,saO,saT,crD:d,crO:o,crEff,lvEff,saEff,delta};
 }
 
 /* ---------- render ---------- */
@@ -503,14 +528,20 @@ function renderRes(){
   $('#k-delta').innerHTML='<span class="delta '+cls+'">'+(c.delta>=0?'+':'')+nf.format(Math.round(c.delta))+'</span>';
   $('#k-delta-note').textContent='vs '+nf.format(Math.round(REF_CLK_MES))+' clics/mes ref. jun–ago 26';
   $('#k-mix').textContent=pct(SHARE_D)+' Direct · '+pct(SHARE_O)+' Organic';
-  $('#ch-dir').innerHTML='<div class="ch">Direct</div><div class="cv">'+nf.format(Math.round(c.clkD))+'</div><div class="cd">'+nf.format(Math.round(c.sesD))+' sesiones · %CR '+pct(c.crD)+'</div>';
-  $('#ch-org').innerHTML='<div class="ch">Organic Search</div><div class="cv">'+nf.format(Math.round(c.clkO))+'</div><div class="cd">'+nf.format(Math.round(c.sesO))+' sesiones · %CR '+pct(c.crO)+'</div>';
+  $('#k-leads').textContent=nf.format(Math.round(c.lvT));
+  $('#k-l2l-note').textContent='clics × '+pct(c.l2l,0)+' → '+nf.format(Math.round(c.lvT))+' leads';
+  $('#k-sales').textContent=nf.format(Math.round(c.saT));
+  $('#k-l2v-note').textContent='leads × '+pct(c.l2v,0)+' → '+nf.format(Math.round(c.saT))+' ventas';
+  $('#k-funnel').textContent=pct(c.saEff);
+  $('#ch-dir').innerHTML='<div class="ch">Direct</div><div class="cv">'+nf.format(Math.round(c.clkD))+'</div><div class="cd">'+nf.format(Math.round(c.sesD))+' sesiones · %CR '+pct(c.crD)+'</div><div class="cd sim">→ '+nf.format(Math.round(c.lvD))+' leads · '+nf.format(Math.round(c.saD))+' ventas (SIM)</div>';
+  $('#ch-org').innerHTML='<div class="ch">Organic Search</div><div class="cv">'+nf.format(Math.round(c.clkO))+'</div><div class="cd">'+nf.format(Math.round(c.sesO))+' sesiones · %CR '+pct(c.crO)+'</div><div class="cd sim">→ '+nf.format(Math.round(c.lvO))+' leads · '+nf.format(Math.round(c.saO))+' ventas (SIM)</div>';
   const f=st.manual?1:(st.preset==='25'?1.25:(st.preset==='50'?1.5:1));
   $('#flow').innerHTML=
     '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> ses. × '+pct(SHARE_D)+'</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.sesD))+'</b> Direct × <b>'+pct(c.crD)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkD))+'</b> clics</span><span class="op">·</span>'+
     '<span class="chip"><b>'+nf.format(Math.round(c.sesO))+'</b> Organic × <b>'+pct(c.crO)+'</b></span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkO))+'</b> clics</span><span class="op">=</span><span class="chip"><b>'+nf.format(Math.round(c.clkT))+'</b> clics WA total</span>'+
+    '<span class="op">→</span><span class="chip sim-chip"><b>'+nf.format(Math.round(c.lvT))+'</b> leads × '+pct(c.l2v,0)+'</span><span class="op">→</span><span class="chip sim-chip"><b>'+nf.format(Math.round(c.saT))+'</b> ventas (SIM)</span>'+
     (f!==1?'<span class="op">·</span><span class="chip">factor preset ×'+f+'</span>':'');
-  let txt='Al escenario corresponden '+nf.format(Math.round(c.clkT))+' clics a WhatsApp (conversión proxy '+pct(c.crEff)+'), frente a un promedio de referencia de '+nf.format(Math.round(REF_CLK_MES))+' clics/mes en jun–ago 26.';
+  let txt='Al escenario corresponden '+nf.format(Math.round(c.clkT))+' clics a WhatsApp (conversión proxy '+pct(c.crEff)+'), frente a un promedio de referencia de '+nf.format(Math.round(REF_CLK_MES))+' clics/mes en jun–ago 26. Con la etapa comercial simulada (= '+pct(c.l2l,0)+' clic→lead y '+pct(c.l2v,0)+' lead→venta), el escenario produce '+nf.format(Math.round(c.lvT))+' leads efectivos y '+nf.format(Math.round(c.saT))+' ventas (volumen simulado, no observado).';
   if(c.clkT>maxClkRow.clkT){ txt+=' Supera el máximo mensual observado ('+nf.format(maxClkRow.clkT)+' clics en '+fmtMonth(maxClkRow.period)+'). Ajusta sesiones o %CR si buscas conservadurismo.'; }
   else if(c.clkT<REF_CLK_MES){ txt+=' Está por debajo del promedio de referencia: escenario de contracción.'; }
   else { txt+=' Se mantiene en el rango de la observación reciente (escenario de continuidad).'; }
@@ -569,6 +600,7 @@ function renderPlan(){
     return '<div class="card kpi"><div class="label">'+fmtMonth(per)+'</div>'+
       '<div class="v" style="font-size:30px">'+nf.format(Math.round(c.clkT))+'</div>'+
       '<div class="note">clics WA · '+nf.format(Math.round(c.ses))+' sesiones · %CR '+pct(c.crEff)+'</div>'+
+      '<div class="note sim">'+nf.format(Math.round(c.lvT))+' leads · '+nf.format(Math.round(c.saT))+' ventas (SIM)</div>'+
       '<div style="margin-top:10px"><span class="pill '+cls+'">'+dir+' vs ref </span></div></div>';
   }).join('');
   $('#ref-line').textContent=nf.format(Math.round(REF_CLK_MES))+' clics/mes';
@@ -718,13 +750,14 @@ function makeXlsx(sheets){
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
 function downloadXlsx(){
   const c=compute(); const month=$('#sel-month').value;
-  const c1=[['Simulador Motorex GA4 · DATA DASH',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir sin aprobación humana'],['Extracción','2026-09-15']];
-  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Share Direct (jun-ago 26)',+SHARE_D.toFixed(4)],['Share Organic (jun-ago 26)',+SHARE_O.toFixed(4)],['%CR Direct aplicado',+c.crD.toFixed(4)],['%CR Organic aplicado',+c.crO.toFixed(4)],['Clics WA Direct',Math.round(c.clkD)],['Clics WA Organic',Math.round(c.clkO)],['Clics WA totales',Math.round(c.clkT)],['%CR efectiva',+c.crEff.toFixed(4)],['Referencia clics/mes (jun-ago 26)',Math.round(REF_CLK_MES)]];
+  const c1=[['Simulador Motorex GA4 · DATA DASH',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir sin aprobación humana'],['Extracción','2026-09-15'],['%Clic WA → Lead efectivo (SIMULADO)',+c.l2l.toFixed(4)],['%Lead → Venta (SIMULADO)',+c.l2v.toFixed(4)],['Aviso etapa comercial','Sin dato observado en la fuente GA4: clic→lead y lead→venta son supuestos de escenario, no métricas reales']];
+  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Share Direct (jun-ago 26)',+SHARE_D.toFixed(4)],['Share Organic (jun-ago 26)',+SHARE_O.toFixed(4)],['%CR Direct aplicado',+c.crD.toFixed(4)],['%CR Organic aplicado',+c.crO.toFixed(4)],['Clics WA Direct',Math.round(c.clkD)],['Clics WA Organic',Math.round(c.clkO)],['Clics WA totales',Math.round(c.clkT)],['%CR efectiva',+c.crEff.toFixed(4)],['Referencia clics/mes (jun-ago 26)',Math.round(REF_CLK_MES)],['%Clic→Lead (SIM)',+c.l2l.toFixed(4)],['%Lead→Venta (SIM)',+c.l2v.toFixed(4)],['Leads efectivos Direct (SIM)',Math.round(c.lvD)],['Leads efectivos Organic (SIM)',Math.round(c.lvO)],['Leads efectivos totales (SIM)',Math.round(c.lvT)],['Ventas Direct (SIM)',Math.round(c.saD)],['Ventas Organic (SIM)',Math.round(c.saO)],['Ventas totales (SIM)',Math.round(c.saT)],['%Ventas ÷ sesiones (SIM)',+c.saEff.toFixed(4)]];
   const hist=[['Mes','Ses Direct','Ses Organic','Ses Total','Cl WA Direct','Cl WA Organic','Cl WA Total','%CR Direct','%CR Organic','%CR Total']].concat(M.map(m=>[fmtMonth(m.period),m.sesD,m.sesO,m.sesT,m.clkD,m.clkO,m.clkT,+m.crD.toFixed(4),+m.crO.toFixed(4),+m.crT.toFixed(4)]));
-  const plan=[['Mes','Clics WA proyectados','Sesiones','%CR efectiva']].concat(['sep-26','oct-26','nov-26','dic-26'].map(per=>[fmtMonth(per),Math.round(c.clkT),Math.round(c.ses),+c.crEff.toFixed(4)]));
+  const plan=[['Mes','Sesiones','Clics WA proyectados','Leads (SIM)','Ventas (SIM)','%CR efectiva','%Ventas÷sesiones (SIM)']].concat(['sep-26','oct-26','nov-26','dic-26'].map(per=>[fmtMonth(per),Math.round(c.ses),Math.round(c.clkT),Math.round(c.lvT),Math.round(c.saT),+c.crEff.toFixed(4),+c.saEff.toFixed(4)]));
   const ch=[['Canal','Sesiones ref (jun-ago 26)','Clics ref','%CR ref'],['Direct',refSesD,refClkD,+CR_D.toFixed(4)],['Organic Search',refSesO,refClkO,+CR_O.toFixed(4)],['Total',refSesT,refClkT,+c.crEff.toFixed(4)]];
   const eqv=[['Mes','Ses DATA DASH','Ses Canal (Dir+Org)','Δ ses','Cl WA DASH','Ev. clave Canal','Δ clk','Ses Tendencia','Cobertura DASH']].concat(M.map(m=>{const t=EQ_TR.get(m.period);return[fmtMonth(m.period),m.sesT,+(m.sesD+m.sesO),+(m.sesT-(m.sesD+m.sesO)),m.clkT,+(m.clkD+m.clkO),+(m.clkT-(m.clkD+m.clkO)),(t?t.ses:''),+(m.sesT/(t?t.ses:1)).toFixed(4)]})).concat([['Total 20m',EQ_TOT.sesD+EQ_TOT.sesO,EQ_TOT.sesD+EQ_TOT.sesO,0,EQ_TOT.clkD+EQ_TOT.clkO,EQ_TOT.clkD+EQ_TOT.clkO,0,0,0]]);
-  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'DATA DASH',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch},{name:'Equivalencias',rows:eqv}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const emb=[['Etapa','Direct','Organic','Total'],['Sesiones',Math.round(c.sesD),Math.round(c.sesO),Math.round(c.ses)],['Clics WA',Math.round(c.clkD),Math.round(c.clkO),Math.round(c.clkT)],['Leads efectivos (SIM)',Math.round(c.lvD),Math.round(c.lvO),Math.round(c.lvT)],['Ventas (SIM)',Math.round(c.saD),Math.round(c.saO),Math.round(c.saT)],['%Sesión→Clic',+c.crD.toFixed(4),+c.crO.toFixed(4),+c.crEff.toFixed(4)],['%Clic→Lead (SIM)',c.l2l,c.l2l,c.l2l],['%Lead→Venta (SIM)',c.l2v,c.l2v,c.l2v],['%Sesión→Venta (SIM)',+((c.saD/(c.sesD||1)).toFixed(4)),+((c.saO/(c.sesO||1)).toFixed(4)),+c.saEff.toFixed(4)]];
+  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'DATA DASH',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch},{name:'Equivalencias',rows:eqv},{name:'Embudo (SIM)',rows:emb}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   dl(blob,'motorex_data_dash_'+month+'.xlsx');
 }
 
@@ -734,6 +767,8 @@ function bind(){
   $('#rg-ses').addEventListener('input',e=>{$('#in-ses').value=e.target.value;renderAll();});
   $('#in-cr-d').addEventListener('input',()=>{renderAll();});
   $('#in-cr-o').addEventListener('input',()=>{renderAll();});
+  $('#in-l2l').addEventListener('input',()=>renderAll());
+  $('#in-l2v').addEventListener('input',()=>renderAll());
   $('#sel-month').addEventListener('change',()=>renderAll());
   $('#presets').addEventListener('click',e=>{
     const b=e.target.closest('.preset-btn'); if(!b)return;
