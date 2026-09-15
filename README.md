@@ -9,7 +9,8 @@ Calculadora de sensibilidad de tráfico para Motorex (Media Lab), enfocada en la
 - Canales: Direct y Organic Search. Conversión proxy = clics a WhatsApp (no transacciones).
 - Modelo: sesiones objetivo → mix de referencia (jun–ago 26: Direct 35.4% / Organic 64.6%) → %CR por canal (mediana: Direct 31.8% / Organic 9.2%) → clics WhatsApp.
 - Presets de eficiencia Continuidad / +25% / +50% / Manual.
-- Export Excel de 5 hojas (Parámetros, Resultados, DATA DASH, Plan, Canales referencia).
+- Export Excel de 6 hojas (Parámetros, Resultados, DATA DASH, Plan, Canales referencia, Equivalencias).
+- Capa de equivalencias entre pestañas del Excel (sección propia en el dashboard): Sesiones DATA DASH = Direct+Organic (Canal mensual) y Clics WA = Eventos clave (Canal/Tendencia), verificados 20/20 con Δ=0; pivote Hoja1 «Suma de Eventos clave» 13,931 (2025) y 9,922 (2026); cobertura 23–39% del tráfico total (la DASH solo incluye Direct + Organic Search).
 
 ## Trazabilidad
 - Fuente: `Motorex_GA4_Auditoria_Consolidada_Ene2025_Ago2026.xlsx` (copia en `data/raw/`, original intacto).
