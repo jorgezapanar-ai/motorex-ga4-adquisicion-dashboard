@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOTOREX | Simulador de adquisición web 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101820; --muted:#647282; --line:#ddd9e7;
+  --bg:#f8f8fb; --card:#fff; --panel:#f5f2f8;
+  --blue:#398dcb; --blue-dark:#466b9f; --violet:#8f85c5; --pink:#b170b5;
+  --amber:#8c5c28; --amber-bg:#f5eadf; --green:#3f7d4e; --green-bg:#eaf3ec;
+  --red:#a43a3a; --red-bg:#f6e9e9;
+  --grad:linear-gradient(100deg,var(--blue) 0%, var(--violet) 55%, var(--pink) 100%);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+a{color:var(--blue-dark)}
+h1,h2,h3{margin:0;letter-spacing:-.03em;line-height:1.12}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-dark)}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--amber);background:var(--amber-bg);border:1px solid rgba(140,92,40,.35)}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(140,92,40,.18)}
+.badge.ok{color:var(--green);background:var(--green-bg);border-color:rgba(63,125,78,.35)}
+.badge.ok::before{background:var(--green);box-shadow:0 0 0 4px rgba(63,125,78,.18)}
+.badge.info{color:var(--blue-dark);background:#eaf1f8;border-color:rgba(70,107,159,.35)}
+.badge.info::before{background:var(--blue-dark)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em}
+.pill.obs{color:var(--blue-dark);background:#eaf1f8}
+.pill.mod{color:#8b4d8f;background:#f3e8f4}
+.pill.warn{color:var(--amber);background:var(--amber-bg)}
+.pill.err{color:var(--red);background:var(--red-bg)}
+.pill.ok{color:var(--green);background:var(--green-bg)}
+/* header */
+.sitehead{background:var(--grad);color:#fff;padding:34px 0 26px}
+.sitehead .row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.sitehead h1{font-size:clamp(26px,5vw,40px);font-weight:800;letter-spacing:-.05em}
+.sitehead .sub{opacity:.92;font-size:14px;margin-top:8px}
+.badge.on-dark{color:#ffe9c9;background:rgba(140,92,40,.28);border-color:rgba(255,233,201,.4)}
+.badge.on-dark::before{background:#ffcf87}
+/* tabs */
+.tabs{display:flex;gap:4px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+box-shadow:0 2px 10px rgba(16,24,32,.05)}
+.tab-btn{border:0;background:none;font:600 13px Montserrat,sans-serif;letter-spacing:.02em;color:var(--muted);padding:14px 22px;cursor:pointer;position:relative}
+.tab-btn[aria-selected="true"]{color:var(--ink)}
+.tab-btn[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;background:var(--grad);border-radius:3px 3px 0 0}
+.tab-btn:hover{color:var(--blue-dark)}
+.tab-btn:focus-visible{outline:3px solid var(--blue);outline-offset:-3px}
+.tab-panel{display:none}
+.tab-panel[hidden]{display:none}
+/* sections */
+section{padding:34px 0;border-top:1px solid var(--line)}
+.section-title{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.section-title h2{font-size:clamp(20px,3.4vw,28px);font-weight:700}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,34px)}
+.hero h2{font-size:clamp(21px,4vw,34px);font-weight:800;margin-top:10px}
+.hero .lead{margin-top:12px;color:var(--muted);font-size:15px;max-width:820px}
+.candado{margin-top:14px;padding:12px 16px;background:var(--panel);border-radius:12px;font-size:13px;color:var(--muted)}
+/* cards & grid */
+.grid{display:grid;gap:16px}
+.grid.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.grid.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.grid.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.kpi .v{font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.055em;margin-top:6px;line-height:1.05}
+.kpi .note{font-size:11px;color:var(--blue-dark);margin-top:6px}
+.kpi .label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* controls */
+.ctrl label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ctrl input[type=number]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:600 16px Montserrat,sans-serif;color:var(--ink);background:#fff}
+.ctrl input[type=number]:focus-visible{outline:3px solid var(--blue);outline-offset:0}
+.ctrl input[type=range]{width:100%;accent-color:var(--blue-dark);margin-top:10px}
+.ctrl .hint{font-size:11px;color:var(--muted);margin-top:6px}
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset-btn{border:1px solid var(--line);background:#fff;color:var(--ink);font:600 12px Montserrat,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}
+.preset-btn[aria-pressed="true"]{background:var(--blue-dark);border-color:var(--blue-dark);color:#fff}
+.preset-btn:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+.chip-manual{display:none;font-size:11px;font-weight:700;color:#8b4d8f;background:#f3e8f4;padding:4px 10px;border-radius:999px}
+.chip-manual.show{display:inline-block}
+.cta{border:0;cursor:pointer;font:700 13px Montserrat,sans-serif;padding:11px 18px;border-radius:10px;background:var(--grad);color:#fff}
+.cta:hover{filter:brightness(1.05)}
+.cta:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.ghost{border:1px solid var(--line);background:#fff;color:var(--ink);font:600 13px Montserrat,sans-serif;padding:10px 16px;border-radius:10px;cursor:pointer}
+.ghost:hover{border-color:var(--blue-dark);color:var(--blue-dark)}
+/* flow chips */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600}
+.chip b{color:var(--blue-dark)}
+.flow .op{color:var(--pink);font-weight:800}
+/* tables */
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-dark);text-align:right;padding:10px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:10px 12px;border-bottom:1px solid #eee9f3;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:#faf8fd}
+tfoot td{font-weight:700;background:var(--panel);border-top:2px solid var(--line)}
+details{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px 20px}
+summary{cursor:pointer;font-weight:700;font-size:14px}
+details p{margin:10px 0;font-size:13px;color:var(--muted)}
+details p b{color:var(--ink)}
+details code{background:var(--panel);border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:12px}
+.bars{margin-top:16px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:12px;margin-bottom:8px}
+.bar-track{background:var(--panel);border-radius:6px;height:18px;overflow:hidden}
+.bar-fill{height:100%;background:var(--grad);border-radius:6px;min-width:2px}
+.bar-val{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+/* mini charts */
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:10px}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.mini h4{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.mini svg{width:100%;height:110px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+.sw.dash{height:0;border-top:3px dashed #b170b5}
+.sw.amb{width:10px;height:10px;border-radius:2px;background:#fff3e6;border:2px solid var(--amber)}
+/* findings & palancas */
+.hallazgo{margin-bottom:14px}
+.hallazgo strong{display:block;color:var(--ink);font-size:14px}
+.hallazgo p{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.palanca{margin-bottom:14px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.palanca h4{margin:0 0 6px;color:var(--blue-dark);font-size:15px;letter-spacing:-.01em}
+.palanca .kv{font-size:12px;color:var(--muted);margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.palanca .kv span{background:var(--panel);border:1px solid var(--line);padding:4px 10px;border-radius:999px;font-weight:600}
+/* estacional */
+.season-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.season-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.season-card b{display:block;font-size:12px;letter-spacing:.05em}
+.season-card span{font-size:11px;color:var(--muted)}
+.season-card .rate{font-weight:700;color:var(--blue-dark);font-size:12px;margin-top:4px}
+/* decisions */
+.decision{margin-top:16px;padding:16px 18px;border-left:4px solid var(--blue-dark);background:var(--panel);border-radius:0 12px 12px 0}
+.decision h3{margin:0 0 6px;font-size:15px}
+.decision p{margin:0;font-size:13px;color:var(--muted)}
+.footer{color:var(--muted);font-size:12px;padding:30px 0 60px;text-align:center;border-top:1px solid var(--line);margin-top:20px}
+.footer .revi{font-weight:700;color:var(--amber)}
+dialog{border:1px solid var(--line);border-radius:16px;padding:0;max-width:min(900px,92vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(16,24,32,.45)}
+.dialog-in{padding:22px}
+.dialog-close{float:right;border:0;background:var(--panel);font:700 13px Montserrat,sans-serif;padding:8px 12px;border-radius:8px;cursor:pointer}
+noscript{display:block;padding:20px;background:var(--red-bg);color:var(--red);font-weight:700;text-align:center}
+@media(max-width:760px){
+  .tab-btn{padding:12px 14px;font-size:12px}
+  section{padding:26px 0}
+  .bar-row{grid-template-columns:110px 1fr 76px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<noscript>Este simulador requiere JavaScript. Habilítalo para cargar los datos embebidos.</noscript>
+
+<header class="sitehead">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="kicker" style="color:#e6ecff">Motorex.com.pe · GA4 adquisición</div>
+        <h1>Simulador de adquisición web 2026</h1>
+        <div class="sub">ENE–AGO 2026 OBSERVADO · SET–DIC 2026 ESCENARIO CONDICIONADO · SENSIBILIDADES, NO VENTAS</div>
+      </div>
+      <span class="badge on-dark">Revisión humana requerida</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Vistas del simulador">
+  <button class="tab-btn" id="tab-proy" role="tab" aria-selected="true" aria-controls="panel-proy">Proyección</button>
+  <button class="tab-btn" id="tab-can" role="tab" aria-selected="false" aria-controls="panel-can">Canales</button>
+</nav>
+
+<div class="wrap">
+
+<section class="hero" id="panel-proy" role="tabpanel" aria-labelledby="tab-proy">
+  <div class="kicker">Lectura ejecutiva</div>
+  <h2>Una palanca de tráfico, dos tasas y un escenario mensual comparable contra la observación.</h2>
+  <p class="lead">El simulador usa el histórico GA4 observado (enero 2025 – agosto 2026) y proyecta <b>setiembre–diciembre 2026</b> a partir de sesiones objetivo, eventos clave por sesión (conversión proxy) e interacción. Los resultados son sensibilidades matemáticas sobre tráfico; <b>no hay ingresos ni inversión observados en el archivo</b>, por lo que no se emite ventas, CAC ni ROAS.</p>
+  <div class="candado">Referencia por defecto: <b>jun–ago 2026</b> (últimos 3 meses completos sin anomalías estructurales). Febrero y marzo 2026 quedan fuera del baseline por ruptura de cardinalidad de rutas; agosto 2026 es el último periodo con dato. La tasa global de eventos clave es 20.6% (104,464 eventos clave / 507,803 sesiones).</div>
+</section>
+
+<section id="proy">
+  <div class="section-title">
+    <div><div class="kicker">Variables</div><h2>Construye el escenario</h2></div>
+    <button class="ghost" id="btn-reset">Restablecer escenario +25%</button>
+  </div>
+
+  <div class="grid g3">
+    <div class="card ctrl">
+      <label for="sel-month">Mes del escenario</label>
+      <select id="sel-month" style="width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:600 15px Montserrat,sans-serif">
+        <option>sep-26</option><option>oct-26</option><option>nov-26</option><option>dic-26</option>
+      </select>
+      <div class="hint">Solo meses futuros; requieren baseline.</div>
+    </div>
+    <div class="card ctrl">
+      <label>Preset de eficiencia</label>
+      <div class="preset-row" id="presets" role="group" aria-label="Preset de eficiencia">
+        <button class="preset-btn" data-preset="0" aria-pressed="false">Continuidad</button>
+        <button class="preset-btn" data-preset="25" aria-pressed="true">+25%</button>
+        <button class="preset-btn" data-preset="50" aria-pressed="false">+50%</button>
+        <button class="preset-btn" data-preset="null" aria-pressed="false">Manual <span class="chip-manual" id="chip-manual">Manual</span></button>
+      </div>
+      <div class="hint"><span class="pill warn">Supuesto</span> +25%/+50% elevan la conversión proxy y reducen el costo por evento clave hipotético a costo por sesión constante. No es benchmark externo.</div>
+    </div>
+    <div class="card ctrl">
+      <label for="in-ses">Sesiones objetivo</label>
+      <input type="number" id="in-ses" min="1000" step="500" value="20000">
+      <input type="range" id="rg-ses" min="5000" max="50000" step="500" value="20000">
+      <div class="hint">Base del escenario: <span id="hint-ses">—</span></div>
+    </div>
+    <div class="card ctrl">
+      <label for="in-tas">Eventos clave por sesión (%) · proxy de conversión</label>
+      <input type="number" id="in-tas" min="1" max="80" step="0.1" value="29.5">
+      <input type="range" id="rg-tas" min="1" max="60" step="0.1" value="29.5">
+      <div class="hint">Base referencia: <span id="hint-tas">—</span> · Máximo mensual observado: <span id="max-tas">—</span>. <b>No es conversión de transacción.</b></div>
+    </div>
+    <div class="card ctrl">
+      <label for="in-int">Sesiones con interacción (%)</label>
+      <input type="number" id="in-int" min="10" max="100" step="0.1" value="65.9">
+      <div class="hint">Base referencia: <span id="hint-int">—</span> · Tasa de interacción (no CTR, no conversión).</div>
+    </div>
+    <div class="card ctrl">
+      <label for="in-inv">Inversión hipotética (S/, opcional)</label>
+      <input type="number" id="in-inv" min="0" step="500" value="0">
+      <div class="hint"><span class="pill warn">Hipotética</span> Sin dato de plataforma en el archivo. Solo informativa para estimar costo por evento clave.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">Resultados</div><h2>Proyección de <span id="r-month">set-26</span></h2></div>
+    <button class="cta" id="btn-xlsx">Descargar excel</button>
+  </div>
+
+  <div class="grid g4" id="res-kpis" aria-live="polite">
+    <div class="card kpi"><div class="label">Sesiones</div><div class="v" id="k-ses">—</div><div class="note">100% del escenario</div></div>
+    <div class="card kpi"><div class="label">Sesiones con interacción</div><div class="v" id="k-int">—</div><div class="note">Proxy de compromiso</div></div>
+    <div class="card kpi"><div class="label">Eventos clave proyectados</div><div class="v grad-text" id="k-ek">—</div><div class="note">Resultado modelado; se muestra con un decimal.</div></div>
+    <div class="card kpi"><div class="label">Costo por evento clave (S/)</div><div class="v" id="k-cpk">—</div><div class="note">Inversión hipotética ÷ eventos clave · <b>no es CAC ni CPA real</b></div></div>
+  </div>
+
+  <div class="grid g3" style="margin-top:16px" aria-live="polite">
+    <div class="card kpi"><div class="label">Eventos totales estimados</div><div class="v" id="k-evt">—</div><div class="note">Sesiones × eventos/sesión de referencia</div></div>
+    <div class="card kpi"><div class="label">Costo por sesión hipotético (S/)</div><div class="v" id="k-cps">—</div><div class="note">Inversión ÷ sesiones · solo si inversión &gt; 0</div></div>
+    <div class="card kpi"><div class="label">Tráfico con interacción por evento clave</div><div class="v" id="k-traf">—</div><div class="note">Sesiones con interacción ÷ eventos clave</div></div>
+  </div>
+
+  <div class="flow" aria-live="polite" id="flow"></div>
+
+  <div class="decision" id="decision" aria-live="polite"></div>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">ENE–AGO 2026</div><h2>Evolución mensual: observado y modelado</h2></div>
+    <span class="pill info" id="cont-title">—</span>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:0">Enero 2025 – agosto 2026 observado en GA4. Febrero y marzo 2026 marcados <span class="pill warn">REVISAR</span> por cardinalidad anómala de rutas en Direct (el propio archivo los señala). Setiembre–diciembre 2026: escenario condicionado. Escalas separadas; no comparar entre gráficos.</p>
+
+  <div class="charts" id="charts"></div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--blue-dark)"></i> Observado GA4</span>
+    <span><i class="sw dash"></i> Escenario modelado</span>
+    <span><i class="sw amb"></i> REVISAR (anomalía estructural)</span>
+  </div>
+
+  <details style="margin-top:18px">
+    <summary>Ver datos mensuales y estado (comparativo YoY incluido)</summary>
+    <div class="tbl-scroll" style="margin-top:12px">
+      <table>
+        <thead><tr>
+          <th>Mes</th><th>Estado</th><th>Sesiones</th><th>Con interacción</th><th>Tasa interacción</th><th>Eventos</th><th>Eventos clave</th><th>EK/sesión</th><th>Tiempo medio (s)</th><th>Rutas</th>
+        </tr></thead>
+        <tbody id="tbl-hist"></tbody>
+        <tfoot id="tbl-hist-foot"></tfoot>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">SET–DIC 2026</div><h2>Plan mensual frente al escenario</h2></div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:-8px 0 18px">Los cuatro meses usan el mismo escenario (mismas sesiones, tasas e inversión). Comparación contra el promedio de referencia jun–ago 2026 y contra el máximo observado. No hay trascendencia de metas netas del archivo no confirmadas en el histórico; iPhone: las rutas de feb/mar 2026 desvían la comparación mensual.</p>
+  <div class="grid g4" id="plan-cards"></div>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">Estacionalidad y perfil</div><h2>Perfil por mes de calendario: contexto, no causalidad</h2></div>
+    <span class="pill err">Riesgo de modelo alto</span>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:-8px 0 16px">Promedio observado por mes de calendario en enero 2025 – agosto 2026. Con 1–2 observaciones por mes no existe regresión válida; los valores son contexto, no coeficientes. El perfil no identifica causalidad: campañas, stock, competencia y tracking no están controlados.</p>
+  <div class="season-cards" id="season-cards"></div>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">Distribución por canal</div><h2>Asignación del escenario de <span id="d-month">set-26</span></h2></div>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin:-8px 0 16px">Las sesiones del escenario se distribuyen según el mix observado en el periodo de referencia <b>jun–ago 2026</b>; los eventos clave por canal usan la tasa de cada canal en ese periodo. Es una asignación, no un gasto observado ni un plan de medios.</p>
+  <div class="grid g2">
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Eventos clave proyectados por canal</h3><div class="bars" id="bars-channel"></div></div>
+    <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Mix del periodo de referencia (sesiones)</h3><div class="bars" id="bars-mix"></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <div><div class="kicker">Diagnóstico ejecutivo</div><h2>Qué está pasando y qué movería el desempeño</h2></div>
+  </div>
+  <div class="grid g2">
+    <div>
+      <div class="kicker">Hallazgos 1–7</div>
+      <p style="color:var(--muted);font-size:13px;margin:4px 0 14px">Observados en el histórico GA4. Sin atribución causal.</p>
+      <div id="hallazgos"></div>
+    </div>
+    <div>
+      <div class="kicker">Palancas A–D</div>
+      <p style="color:var(--muted);font-size:13px;margin:4px 0 14px">Recomendaciones, separadas de los datos.</p>
+      <div id="palancas"></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<section role="tabpanel" id="panel-can" aria-labelledby="tab-can" hidden>
+  <div class="wrap">
+    <div class="section-title">
+      <div><div class="kicker">GA4 · Canal mensual</div><h2>Adquisición por canal: sesiones, interacción y conversión proxy</h2></div>
+      <label class="pill info" style="font-size:12px">Fuente: hoja «Canal mensual» · 20 meses · extracción 2026-09-15</label>
+    </div>
+    <div class="grid g3">
+      <div class="card kpi"><div class="label">Canales activos</div><div class="v" id="c-ncan">—</div><div class="note">7–9 por mes; Organic Video intermitente</div></div>
+      <div class="card kpi"><div class="label">Paid Search · share sesiones</div><div class="v" id="c-ps">—</div><div class="note">341,533 sesiones de 507,803</div></div>
+      <div class="card kpi"><div class="label">Paid Search · share eventos clave</div><div class="v" id="c-pske">—</div><div class="note">78,244 de 104,464</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="kicker" style="margin-bottom:12px">Mix total por canal · ene-25 → ago-26</div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Canal</th><th>Sesiones</th><th>% ses.</th><th>Eventos clave</th><th>% EK</th><th>EK/sesión</th></tr></thead>
+          <tbody id="tbl-mix"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="kicker" style="margin-bottom:12px">Canal mensual · periodo</div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Periodo</th><th>Canal</th><th>Sesiones</th><th>Ses. interacción</th><th>Tasa interacción</th><th>Eventos</th><th>Eventos clave</th><th>EK/sesión</th></tr></thead>
+          <tbody id="tbl-channel"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <details>
+      <summary>Fuentes, fórmulas y limitaciones</summary>
+      <p><b>Fuente:</b> <code>motorex_ga4_auditoria_consolidada_ene2025_ago2026.xlsx</code> (copia en <code>data/raw/</code>, original intacto), hojas «Tendencia mensual», «Canal mensual», «Calidad» y «Consolidado» (20,618 filas). Extracción 2026-09-15. Capas derivadas: <code>motorex_ga4_monthly_trend_2026.csv</code>, <code>motorex_ga4_channel_agg_2026.csv</code>, <code>motorex_ga4_data_quality_2026.csv</code> y manifest <code>motorex_ga4_extraction_manifest_2026.json</code>.</p>
+      <p><b>Cobertura:</b> enero 2025 – agosto 2026 (20 meses). Setiembre 2026 no fue adjuntado (el propio archivo lo marca en la fila FALTA del histórico). Febrero y marzo 2026 tienen estado REVISAR por cardinalidad de rutas anómala (3,682 y 2,578 rutas; ~12.7x y ~8.9x de la mediana), concentrada en tráfico Direct con baja interacción.</p>
+      <p><b>Métricas:</b> «Sesiones por ruta (proxy)» es la métrica del fuente; su suma (507,803) cuadra con las 20,618 filas del Consolidado. Los eventos clave son <b>proxy de conversión</b>: no concilian con transacciones comerciales. Los ingresos GA4 son <b>cero en todo el histórico</b>: no hay señal de ventas en el archivo y por eso el simulador no emite ingresos.</p>
+      <p><b>Fórmulas:</b> Eventos clave = sesiones objetivo × tasa objetivo. Sesiones con interacción = sesiones × tasa de interacción de referencia. Costo por evento clave hipotético = inversión hipotética ÷ eventos clave. Tráfico con interacción por evento clave = sesiones con interacción ÷ eventos clave. Presets +25%/+50%: multiplican la conversión proxy por 1.25/1.50 y dividen el costo por evento clave hipotético por el mismo factor, a costo por sesión constante.</p>
+      <p><b>Baseline:</b> jun–ago 2026 (3 meses completos sin anomalía; pooling: 59,642 sesiones, 17,615 eventos clave, 26.18% eventos clave/sesión, 65.86% interacción, 4.39 eventos/sesión, 24.12 s de tiempo medio). No se usan feb/mar 2026 por ruptura de definición.</p>
+      <p><b>Modelo causal:</b> promoción, stock, precio, competencia y tracking no están controlados; no se identifica causalidad ni incrementalidad. Los presets y la distribución por canal son sensibilidades matemáticas. «Proxy», «hipotético», «condicionado» son términos deliberados: <b>no es forecast, ROAS, CAC ni garantía de ventas</b>.</p>
+      <p><b>Estado:</b> <code>human_review_required</code>. No compartir con cliente sin aprobación humana. Validaciones: 100% de los 20 meses pasan estructura; suma canal = tendencia en los 20 periodos; agregado del Consolidado = tendencia (Δ 0); 0 duplicados canal–ruta.</p>
+    </details>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div>
+      <div class="revi">NO COMPARTIR CON CLIENTE SIN APROBACIÓN HUMANA</div>
+      <div>Motorex.com.pe · GA4 adquisición web · Datos observados ene-25 → ago-26 · modelo actualizado el 15 de septiembre de 2026 · simulación condicionada, revisión humana requerida</div>
+    </div>
+  </div>
+</footer>
+
+<script id="DATA">
+const DATA = {"monthly":[["ene-25",22602,15060,0.66631272,23.80280506,90590,4.00805238,1916,0.07649766,0,301,798,"OBSERVADO"],["feb-25",43458,30760,0.70780984,25.20705049,190435,4.38204703,15060,0.10706889,0,320,786,"OBSERVADO"],["mar-25",35096,25823,0.73578186,28.88577046,151287,4.31066218,9501,0.10069524,0,294,731,"OBSERVADO"],["abr-25",25888,17828,0.68865884,25.58660383,97946,3.78345179,3423,0.09147095,0,279,723,"OBSERVADO"],["may-25",32130,22182,0.69038282,25.80445067,120659,3.75533769,4936,0.09200124,0,280,752,"OBSERVADO"],["jun-25",25618,17657,0.68924194,22.72976032,97963,3.82399094,3498,0.09263018,0,290,716,"OBSERVADO"],["jul-25",29325,19330,0.65916454,22.14100597,111839,3.81377664,4310,0.0968798,0,277,712,"OBSERVADO"],["ago-25",27776,19289,0.69444844,21.83053715,105609,3.80216734,3301,0.08820565,0,291,744,"OBSERVADO"],["sep-25",22606,15977,0.70675927,24.86277979,86895,3.843891,2386,0.08086349,0,291,775,"OBSERVADO"],["oct-25",22420,15293,0.68211418,23.62158787,87467,3.90129349,2222,0.07604817,0,462,980,"OBSERVADO"],["nov-25",22658,15874,0.7005914,25.40449289,91470,4.03698473,1862,0.05569777,0,346,911,"OBSERVADO"],["dic-25",18215,12935,0.71012901,24.56080154,75609,4.15091957,2857,0.10376064,0,280,641,"OBSERVADO"],["ene-26",25452,18090,0.71074965,24.44086909,103826,4.0792865,4618,0.1358243,0,389,839,"OBSERVADO"],["feb-26",27058,16254,0.60070959,22.15156331,111851,4.13374972,7445,0.12103629,0,3682,4050,"REVISAR"],["mar-26",26344,16097,0.61103097,23.85708321,109140,4.14287883,7594,0.12306408,0,2578,3002,"REVISAR"],["abr-26",21821,14650,0.67137161,23.45424133,95731,4.38710417,8511,0.12249668,0,370,798,"OBSERVADO"],["may-26",19694,13117,0.66604042,27.74596324,82266,4.17721133,3409,0.11033817,0,259,649,"OBSERVADO"],["jun-26",19797,13348,0.67424357,22.67899177,91239,4.6087286,8904,0.19376673,0,245,687,"OBSERVADO"],["jul-26",18190,11720,0.64431006,24.21726223,76768,4.22034085,3577,0.126663,0,287,676,"OBSERVADO"],["ago-26",21655,14213,0.65633803,25.47725698,93797,4.33142461,5134,0.12297391,0,272,648,"OBSERVADO"]],"channel":[["abr-25","Cross-network",104,83,0.798077,522,5.019231,12,0.115385],["abr-25","Direct",3026,1855,0.61302,11950,3.949108,613,0.202578],["abr-25","Organic Search",5448,3811,0.699523,21217,3.894457,337,0.061858],["abr-25","Organic Social",55,26,0.472727,191,3.472727,2,0.036364],["abr-25","Paid Search",16842,11875,0.705083,62728,3.724498,2445,0.145173],["abr-25","Paid Social",122,22,0.180328,394,3.229508,0,0],["abr-25","Referral",151,108,0.715232,535,3.543046,5,0.033113],["abr-25","Unassigned",140,48,0.342857,409,2.921429,9,0.064286],["abr-26","Cross-network",181,172,0.950276,947,5.232044,28,0.154696],["abr-26","Direct",2154,1136,0.527391,10919,5.069174,1233,0.572423],["abr-26","Organic Search",4559,3105,0.68107,17187,3.769906,442,0.096951],["abr-26","Organic Social",34,26,0.764706,129,3.794118,2,0.058824],["abr-26","Organic Video",3,3,1,11,3.666667,0,0],["abr-26","Paid Search",14345,9915,0.691182,64806,4.517672,6779,0.472569],["abr-26","Referral",223,134,0.600897,635,2.847534,13,0.058296],["abr-26","Unassigned",322,159,0.493789,1097,3.406832,14,0.043478],["ago-25","Cross-network",166,126,0.759036,888,5.349398,15,0.090361],["ago-25","Direct",2445,1455,0.595092,9368,3.831493,469,0.19182],["ago-25","Organic Search",5002,3464,0.692523,19055,3.809476,283,0.056577],["ago-25","Organic Social",33,24,0.727273,120,3.636364,0,0],["ago-25","Paid Search",19723,14013,0.71049,74864,3.795771,2515,0.127516],["ago-25","Paid Social",67,15,0.223881,226,3.373134,1,0.014925],["ago-25","Referral",139,100,0.719424,481,3.460432,5,0.035971],["ago-25","Unassigned",201,92,0.457711,607,3.0199,13,0.064677],["ago-26","AI Assistant",43,33,0.767442,151,3.511628,6,0.139535],["ago-26","Cross-network",182,172,0.945055,1036,5.692308,46,0.252747],["ago-26","Direct",2910,1346,0.462543,12306,4.228866,740,0.254296],["ago-26","Organic Search",3848,2721,0.707121,14519,3.773129,351,0.091216],["ago-26","Organic Social",55,42,0.763636,214,3.890909,2,0.036364],["ago-26","Paid Search",14294,9710,0.679306,64464,4.509864,3962,0.277179],["ago-26","Referral",97,67,0.690722,346,3.56701,9,0.092784],["ago-26","Unassigned",226,122,0.539823,761,3.367257,18,0.079646],["dic-25","Cross-network",86,78,0.906977,498,5.790698,16,0.186047],["dic-25","Direct",1137,602,0.529464,5842,5.138083,670,0.58927],["dic-25","Organic Search",3973,2854,0.718349,16762,4.218978,390,0.098163],["dic-25","Organic Social",40,22,0.55,136,3.4,0,0],["dic-25","Organic Video",4,4,1,25,6.25,1,0.25],["dic-25","Paid Search",12677,9210,0.726513,51129,4.03321,1752,0.138203],["dic-25","Referral",151,106,0.701987,646,4.278146,8,0.05298],["dic-25","Unassigned",147,59,0.401361,571,3.884354,20,0.136054],["ene-25","Direct",1943,926,0.476583,7179,3.694802,173,0.089038],["ene-25","Organic Search",5788,4124,0.712509,22543,3.894782,347,0.059952],["ene-25","Organic Social",716,524,0.731844,2607,3.641061,60,0.083799],["ene-25","Organic Video",2,1,0.5,8,4,0,0],["ene-25","Paid Search",13733,9200,0.669919,56799,4.13595,1308,0.095245],["ene-25","Referral",235,200,0.851064,838,3.565957,12,0.051064],["ene-25","Unassigned",185,85,0.459459,616,3.32973,16,0.086486],["ene-26","Cross-network",169,158,0.934911,981,5.804734,24,0.142012],["ene-26","Direct",1545,820,0.530744,6033,3.904854,327,0.21165],["ene-26","Organic Search",4865,3505,0.720452,19930,4.096608,535,0.109969],["ene-26","Organic Social",47,35,0.744681,165,3.510638,2,0.042553],["ene-26","Organic Video",2,2,1,6,3,0,0],["ene-26","Paid Search",18310,13238,0.722993,74852,4.088039,3680,0.200983],["ene-26","Referral",328,231,0.704268,1231,3.753049,23,0.070122],["ene-26","Unassigned",186,101,0.543011,628,3.376344,27,0.145161],["feb-25","Direct",4764,3235,0.679051,22384,4.698573,3666,0.769521],["feb-25","Organic Search",5356,3751,0.700336,20530,3.833084,340,0.06348],["feb-25","Organic Social",588,434,0.738095,2228,3.789116,54,0.091837],["feb-25","Organic Video",12,12,1,58,4.833333,1,0.083333],["feb-25","Paid Search",32345,23129,0.715072,141277,4.367816,9818,0.30354],["feb-25","Referral",177,131,0.740113,619,3.497175,15,0.084746],["feb-25","Unassigned",216,68,0.314815,3339,15.458333,1166,5.398148],["feb-26","Cross-network",267,255,0.955056,1500,5.617978,61,0.228464],["feb-26","Direct",6135,899,0.146536,21106,3.440261,663,0.108068],["feb-26","Organic Search",4299,3035,0.705978,16489,3.835543,485,0.112817],["feb-26","Organic Social",52,35,0.673077,173,3.326923,2,0.038462],["feb-26","Organic Video",8,7,0.875,29,3.625,0,0],["feb-26","Paid Search",15962,11844,0.742012,71366,4.470994,6185,0.387483],["feb-26","Referral",173,102,0.589595,652,3.768786,33,0.190751],["feb-26","Unassigned",162,77,0.475309,536,3.308642,16,0.098765],["jul-25","Cross-network",173,105,0.606936,821,4.745665,15,0.086705],["jul-25","Direct",2905,1640,0.564544,11333,3.901205,617,0.212392],["jul-25","Organic Search",5137,3513,0.683862,19701,3.835118,314,0.061125],["jul-25","Organic Social",60,47,0.783333,203,3.383333,2,0.033333],["jul-25","Organic Video",8,7,0.875,28,3.5,0,0],["jul-25","Paid Search",20656,13853,0.670653,78502,3.800445,3346,0.161987],["jul-25","Paid Social",83,12,0.144578,261,3.144578,0,0],["jul-25","Referral",136,97,0.713235,473,3.477941,4,0.029412],["jul-25","Unassigned",167,56,0.335329,517,3.095808,12,0.071856],["jul-26","AI Assistant",37,27,0.72973,160,4.324324,6,0.162162],["jul-26","Cross-network",208,186,0.894231,1201,5.774038,44,0.211538],["jul-26","Direct",1478,544,0.368065,5851,3.958728,470,0.317997],["jul-26","Organic Search",3496,2433,0.695938,13508,3.863844,321,0.091819],["jul-26","Organic Social",22,14,0.636364,78,3.545455,0,0],["jul-26","Organic Video",1,1,1,4,4,0,0],["jul-26","Paid Search",12663,8372,0.661139,54976,4.341467,2717,0.214562],["jul-26","Referral",113,72,0.637168,422,3.734513,8,0.070796],["jul-26","Unassigned",172,71,0.412791,568,3.302326,11,0.063953],["jun-25","Cross-network",141,91,0.64539,700,4.964539,14,0.099291],["jun-25","Direct",2878,1840,0.639333,11329,3.936414,649,0.225504],["jun-25","Organic Search",5528,3863,0.698806,21374,3.866498,303,0.054812],["jun-25","Organic Social",38,22,0.578947,155,4.078947,3,0.078947],["jun-25","Paid Search",16595,11596,0.698765,62912,3.791021,2479,0.149382],["jun-25","Paid Social",118,62,0.525424,421,3.567797,18,0.152542],["jun-25","Referral",164,121,0.737805,583,3.554878,16,0.097561],["jun-25","Unassigned",156,62,0.397436,489,3.134615,16,0.102564],["jun-26","AI Assistant",41,23,0.560976,147,3.585366,9,0.219512],["jun-26","Cross-network",104,85,0.817308,509,4.894231,22,0.211538],["jun-26","Direct",1764,878,0.497732,9712,5.505669,1769,1.002834],["jun-26","Organic Search",3906,2655,0.679724,14896,3.81362,390,0.099846],["jun-26","Organic Social",33,24,0.727273,135,4.090909,0,0],["jun-26","Paid Search",13502,9467,0.701155,64539,4.779959,6685,0.495112],["jun-26","Referral",174,130,0.747126,578,3.321839,15,0.086207],["jun-26","Unassigned",273,86,0.315018,723,2.648352,14,0.051282],["mar-25","Cross-network",12,11,0.916667,71,5.916667,1,0.083333],["mar-25","Direct",3517,2373,0.674723,15470,4.398635,1639,0.466022],["mar-25","Organic Search",5932,4078,0.687458,23098,3.893796,440,0.074174],["mar-25","Organic Social",201,50,0.248756,662,3.293532,4,0.0199],["mar-25","Organic Video",2,1,0.5,6,3,0,0],["mar-25","Paid Search",25065,19131,0.763256,110801,4.420547,7389,0.294794],["mar-25","Referral",140,90,0.642857,510,3.642857,8,0.057143],["mar-25","Unassigned",227,89,0.39207,669,2.947137,20,0.088106],["mar-26","Cross-network",234,219,0.935897,1243,5.311966,60,0.25641],["mar-26","Direct",4652,1045,0.224635,18012,3.871883,1129,0.242691],["mar-26","Organic Search",4821,3283,0.680979,18317,3.799419,462,0.095831],["mar-26","Organic Social",38,25,0.657895,145,3.815789,2,0.052632],["mar-26","Paid Search",16070,11227,0.698631,69505,4.32514,5903,0.36733],["mar-26","Referral",196,128,0.653061,659,3.362245,11,0.056122],["mar-26","Unassigned",333,170,0.510511,1259,3.780781,27,0.081081],["may-25","Cross-network",139,107,0.769784,667,4.798561,8,0.057554],["may-25","Direct",3759,2424,0.644852,15423,4.102953,940,0.250067],["may-25","Organic Search",5382,3752,0.697139,20954,3.893348,315,0.058528],["may-25","Organic Social",48,32,0.666667,183,3.8125,4,0.083333],["may-25","Paid Search",22238,15617,0.702266,81582,3.668585,3643,0.163819],["may-25","Paid Social",170,29,0.170588,534,3.141176,1,0.005882],["may-25","Referral",154,110,0.714286,599,3.88961,10,0.064935],["may-25","Unassigned",240,111,0.4625,717,2.9875,15,0.0625],["may-26","Cross-network",251,228,0.908367,1271,5.063745,37,0.14741],["may-26","Direct",1839,959,0.521479,7776,4.228385,225,0.122349],["may-26","Organic Search",4327,3000,0.693321,16668,3.852092,380,0.087821],["may-26","Organic Social",36,28,0.777778,142,3.944444,0,0],["may-26","Paid Search",12643,8582,0.678795,54199,4.286878,2731,0.216009],["may-26","Referral",217,144,0.663594,824,3.797235,16,0.073733],["may-26","Unassigned",381,176,0.461942,1386,3.637795,20,0.052493],["nov-25","Cross-network",171,161,0.94152,1043,6.099415,21,0.122807],["nov-25","Direct",1761,1039,0.590006,7778,4.416809,112,0.0636],["nov-25","Organic Search",5267,3623,0.687868,20502,3.892538,216,0.04101],["nov-25","Organic Social",31,18,0.580645,115,3.709677,0,0],["nov-25","Paid Search",14788,10718,0.724777,59912,4.051393,1496,0.101163],["nov-25","Referral",283,208,0.734982,1110,3.922261,10,0.035336],["nov-25","Unassigned",357,107,0.29972,1010,2.829132,7,0.019608],["oct-25","Cross-network",157,144,0.917197,868,5.528662,27,0.171975],["oct-25","Direct",1833,970,0.529187,7236,3.947627,205,0.111839],["oct-25","Organic Search",5311,3488,0.65675,20277,3.817925,287,0.054039],["oct-25","Organic Social",33,26,0.787879,128,3.878788,1,0.030303],["oct-25","Organic Video",5,4,0.8,23,4.6,0,0],["oct-25","Paid Search",14554,10419,0.715886,57460,3.948056,1683,0.115638],["oct-25","Referral",193,141,0.73057,650,3.367876,5,0.025907],["oct-25","Unassigned",334,101,0.302395,825,2.47006,14,0.041916],["sep-25","Cross-network",126,108,0.857143,664,5.269841,18,0.142857],["sep-25","Direct",1895,1102,0.58153,7133,3.764116,263,0.138786],["sep-25","Organic Search",5592,3856,0.689557,21588,3.860515,343,0.061338],["sep-25","Organic Social",26,25,0.961538,98,3.769231,1,0.038462],["sep-25","Paid Search",14528,10660,0.733756,56058,3.858618,1728,0.118943],["sep-25","Paid Social",29,25,0.862069,76,2.62069,0,0],["sep-25","Referral",147,121,0.823129,579,3.938776,11,0.07483],["sep-25","Unassigned",263,80,0.304183,699,2.657795,22,0.08365]]};
+</script>
+<script>
+/* ---------- util ---------- */
+const $=s=>document.querySelector(s);
+const nf=new Intl.NumberFormat('es-PE',{maximumFractionDigits:0});
+const nf1=new Intl.NumberFormat('es-PE',{minimumFractionDigits:1,maximumFractionDigits:1});
+const pct=(x,d=1)=>((x)*100).toFixed(d)+'%';
+const monthLabel=m=>m.replace(/(...)-(\d+)/,(_,a,b)=>capa(b)+'-'+a.toUpperCase());
+function capa(m){const map={'01':'ENE','02':'FEB','03':'MAR','04':'ABR','05':'MAY','06':'JUN','07':'JUL','08':'AGO','09':'SET','10':'OCT','11':'NOV','12':'DIC'};return map[m]||m;}
+function fmtMonth(p){const [mm,yy]=p.split('-');const map={'ene':'ENE','feb':'FEB','mar':'MAR','abr':'ABR','may':'MAY','jun':'JUN','jul':'JUL','ago':'AGO','sep':'SET','oct':'OCT','nov':'NOV','dic':'DIC'};return map[mm]+'-'+yy.slice(-2);}
+
+/* ---------- data ---------- */
+const M = DATA.monthly.map(r=>({
+  period:r[0], sessions:+r[1], engaged:+r[2], eRate:+r[3], dur:+r[4], events:+r[5],
+  eps:+r[6], keyEvents:+r[7], keyRate:+r[8], revenue:+r[9], routes:+r[10], rows:+r[11], status:r[12]
+}));
+const CH = DATA.channel.map(r=>({period:r[0],channel:r[1],sessions:+r[2],engaged:+r[3],eRate:+r[4],events:+r[5],eps:+r[6],keyEvents:+r[7],keyRate:+r[8]}));
+
+const REF=['jun-26','jul-26','ago-26'];
+const refRows=M.filter(m=>REF.includes(m.period));
+const refSessions=refRows.reduce((a,b)=>a+b.sessions,0);
+const refKey=refRows.reduce((a,b)=>a+b.keyEvents,0);
+const refEngaged=refRows.reduce((a,b)=>a+b.engaged,0);
+const refEvents=refRows.reduce((a,b)=>a+b.events,0);
+const refDur=refRows.reduce((a,b)=>a+b.dur*b.sessions,0)/refSessions;
+const REF_KE=refKey/refSessions;           // 0.2618 - convert rate proxy baseline
+const REF_INT=refEngaged/refSessions;      // 0.6586
+const REF_EPS=refEvents/refSessions;       // 4.39
+const MAX_TAS=Math.max(...M.map(m=>m.keyEvents/m.sessions));
+const maxKeRow=M.reduce((a,b)=>a.keyEvents>b.keyEvents?a:b);
+
+const FUT=['sep-26','oct-26','nov-26','dic-26'];
+const FIT_MONTH=f=>f;
+
+/* ---------- state ---------- */
+const st={preset:'25',manual:false,sessions:20000,tasa:REF_KE*100,int:REF_INT*100,inv:0};
+function refreshState(){}
+function markManual(){ st.manual=true; $('#chip-manual').classList.add('show');
+  document.querySelectorAll('#presets .preset-btn').forEach(b=>{ if(b.dataset.preset!=='null')b.setAttribute('aria-pressed','false'); });
+  $('#presets .preset-btn[data-preset="null"]').setAttribute('aria-pressed','true');
+}
+function setPreset(p){
+  st.preset=p; st.manual=false; $('#chip-manual').classList.remove('show');
+  document.querySelectorAll('#presets .preset-btn').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.preset)===String(p)));
+  $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
+}
+const round1=x=>Math.round(x*10)/10;
+
+/* compute */
+function effectiveTasa(){
+  if(st.manual) return (+$('#in-tas').value)/100;
+  const f=st.preset==='25'?1.25:(st.preset==='50'?1.5:1);
+  return st.tasa/100*f;
+}
+function compute(){
+  const ses=+$('#in-ses').value||0;
+  const tasa=effectiveTasa();
+  const inter=(+$('#in-int').value)/100;
+  const inv=+$('#in-inv').value||0;
+  const ek=ses*tasa;
+  const interSes=ses*inter;
+  const evt=ses*REF_EPS;
+  const cpk=ek>0?inv/ek:0;
+  const cps=ses>0?inv/ses:0;
+  const traf=ek>0?interSes/ek:0;
+  return {ses,tasa,inter,inv,ek,interSes,evt,cpk,cps,traf};
+}
+
+/* render KPIs */
+const FNEW=1.25;
+let flowRendered=false;
+function renderRes(){
+  const month=$('#sel-month').value;
+  const c=compute();
+  $('#r-month').textContent=fmtMonth(month);
+  $('#d-month').textContent=fmtMonth(month);
+  $('#k-ses').textContent=nf.format(Math.round(c.ses));
+  $('#k-int').textContent=nf.format(Math.round(c.interSes));
+  $('#k-ek').textContent=nf1.format(Math.round(c.ek*10)/10);
+  $('#k-cpk').textContent = c.inv>0 ? 'S/ '+nf.format(c.cpk) : 'sin inversión hipotética';
+  $('#k-evt').textContent=nf.format(Math.round(c.evt));
+  $('#k-cps').textContent = c.inv>0 ? 'S/ '+nf.format(c.cps) : '—';
+  $('#k-traf').textContent = c.ek>0 ? c.traf.toFixed(2)+' por EK' : '—';
+  $('#flow').innerHTML=
+    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> sesiones × <b>'+pct(c.tasa)+'</b> EK/sesión</span><span class="op">=</span>'+
+    '<span class="chip"><b>'+nf1.format(c.ek)+'</b> eventos clave</span><span class="op">·</span>'+
+    '<span class="chip"><b>'+nf.format(Math.round(c.ses))+'</b> × <b>'+pct(c.inter)+'</b> interacción</span><span class="op">=</span>'+
+    '<span class="chip"><b>'+nf.format(Math.round(c.interSes))+'</b> sesiones con interacción</span><span class="op">·</span>'+
+    '<span class="chip">'+c.traf.toFixed(2)+' sesiones con interacción por evento clave</span>'+
+    (c.inv>0?'<span class="op">·</span><span class="chip">S/ '+nf.format(c.inv)+' ÷ '+nf1.format(c.ek)+' = <b>'+nf.format(c.cpk)+'</b> S/ por EK (hipotético)</span>':'');
+  /* decision */
+  const f=st.manual?1:(st.preset==='25'?1.25:(st.preset==='50'?1.5:1));
+  let txt;
+  /* compare against observed max */
+  txt='Al escenario actual corresponden '+nf1.format(c.ek)+' eventos clave (conversión proxy '+pct(c.tasa)+'), frente a un promedio de referencia de '+nf.format(Math.round(refSessions/3))+ ' sesiones y '+nf.format(Math.round(refKey/3))+' eventos clave por mes en jun–ago 2026.';
+  if(c.ek>maxKeRow.keyEvents){
+    txt+= ' Supera el máximo mensual observado ('+nf.format(maxKeRow.keyEvents)+' EK en '+fmtMonth(maxKeRow.period)+'). Ajusta las sesiones o la tasa si buscas un escenario conservador.';
+  }else if(c.ek<refKey){
+    txt+=' Está por debajo del promedio de referencia: es un escenario de contracción de conversión proxy.';
+  }else{
+    txt+=' Se mantiene en el rango de la observación reciente (escenario de continuidad).';
+  }
+  txt+= c.inv>0 ? ' El costo por evento clave hipotético de S/ '+nf.format(c.cpk)+' es una sensibilidad informativa, no un dato de plataforma.' : '';
+  $('#decision').innerHTML='<h3>Contraste contra la observación</h3><p>'+txt+'</p>';
+  renderCharts();
+  renderPlan();
+  renderChannels();
+}
+function tasaRefForPrint(){return REF_KE;}
+let chartsRendered=false,planRendered=false,channelRendered=false;
+
+/* ---------- charts ---------- */
+function spark(id,series,cfg){
+  /* series:[{per:sessions}] */
+  const W=300,H=100,pad=6;
+  const vals=series.map(s=>s.v);
+  const vmin=Math.min(...vals),vmax=Math.max(...vals),range=(vmax-vmin)||1;
+  const x=i=>pad+(W-pad*2)*i/(vals.length-1);
+  const y=v=>H-pad-(v-vmin)/range*(H-pad*2);
+  let path='';
+  const obs=[]
+  const model=[];
+  series.forEach((s,i)=>{ if(s.kind==='obs')obs.push([i,s.v]); else model.push([i,s.v]); });
+  path='M'+obs.concat(model).map(o=>x(o[0]).toFixed(1)+','+y(o[1]).toFixed(1)).join(' L');
+  let px='';
+  obs.forEach(o=>{ if(!['feb-26','mar-26'].includes(series[o[0]].per)) px+='<circle cx="'+x(o[0]).toFixed(1)+'" cy="'+y(o[1]).toFixed(1)+'" r="2.6" fill="#466b9f"/>'; });
+  obs.forEach(o=>{ if(['feb-26','mar-26'].includes(series[o[0]].per)) px+='<rect x="'+(x(o[0])-3).toFixed(1)+'" y="'+(y(o[1])-3).toFixed(1)+'" width="6" height="6" fill="#fff3e6" stroke="#8c5c28" stroke-width="1.5" rx="1"/>'; });
+  model.forEach(o=>{ px+='<circle cx="'+x(o[0]).toFixed(1)+'" cy="'+y(o[1]).toFixed(1)+'" r="2.6" fill="#fff" stroke="#b170b5" stroke-width="1.5"/>'; });
+  const tips=series.map((s,i)=>'<title>'+fmtMonth(s.per)+': '+cfg.fmt(s.v)+' ('+($('#sel-month').value===s.per?'escenario':'observado')+')</title>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+cfg.label+'">'+tips+
+    '<path d="'+path+'" fill="none" stroke="#466b9f" stroke-width="1.8"/>'+px+'</svg>';
+}
+function buildSeries(metric){
+  const ser=[];
+  M.forEach(m=>{ let v; if(metric==='sessions')v=m.sessions; else if(metric==='keyEvents')v=m.keyEvents; else if(metric==='keyRate')v=m.keyEvents/m.sessions; else if(metric==='events')v=m.events; else v=m.engaged;
+    ser.push({per:m.period,v,kind:'obs'}); });
+  const c=compute();
+  const v= metric==='sessions'?c.ses: metric==='keyEvents'?c.ek : metric==='keyRate'?c.tasa : metric==='events'?c.evt : c.interSes;
+  FUT.forEach(per=>ser.push({per,v,kind:'mod'}));
+  return ser;
+}
+function renderCharts(){
+  const c=compute();
+  $('#charts').innerHTML=
+    '<div class="mini"><h4>Sesiones</h4>'+spark('s1',buildSeries('sessions'),{label:'Sesiones por mes',fmt:v=>nf.format(v)})+ '</div>'+
+    '<div class="mini"><h4>Eventos clave / sesión (proxy)</h4>'+spark('s2',buildSeries('keyRate'),{label:'Conversión proxy por mes',fmt:v=>pct(v)})+ '</div>'+
+    '<div class="mini"><h4>Eventos clave</h4>'+spark('s3',buildSeries('keyEvents'),{label:'Eventos clave por mes',fmt:v=>nf.format(v)})+ '</div>'+
+    '<div class="mini"><h4>Eventos totales</h4>'+spark('s4',buildSeries('events'),{label:'Eventos por mes',fmt:v=>nf.format(v)})+ '</div>';
+}
+
+/* ---------- historic table ---------- */
+function renderHist(){
+  const rows=M.map(m=>{
+    const st=m.period&&['jun-26','jul-26','ago-26'].includes(m.period)?'<span class="pill ok">Ref</span>':'';
+    const sts=m.status==='REVISAR'?'<span class="pill warn">REVISAR</span>':'<span class="pill obs">Observado</span>';
+    return '<tr><td>'+fmtMonth(m.period)+' '+(m.period&&['jun-26','jul-26','ago-26'].includes(m.period)?'<span class="pill ok">Ref</span>':'')+'</td><td>'+sts+'</td><td>'+nf.format(m.sessions)+'</td><td>'+nf.format(m.engaged)+'</td><td>'+pct(m.eRate)+'</td><td>'+nf.format(m.events)+'</td><td>'+nf.format(m.keyEvents)+'</td><td>'+pct(m.keyEvents/m.sessions)+'</td><td>'+nf.format(m.dur)+'</td><td>'+nf.format(m.routes)+'</td></tr>';
+  }).join('');
+  $('#tbl-hist').innerHTML=rows;
+  const tot={s:M.reduce((a,b)=>a+b.sessions,0),e:M.reduce((a,b)=>a+b.engaged,0),ev:M.reduce((a,b)=>a+b.events,0),k:M.reduce((a,b)=>a+b.keyEvents,0)};
+  $('#tbl-hist-foot').innerHTML='<tr><td>Total / prom.</td><td></td><td>'+nf.format(tot.s)+'</td><td>'+nf.format(tot.e)+'</td><td>'+pct(tot.e/tot.s)+'</td><td>'+nf.format(tot.ev)+'</td><td>'+nf.format(tot.k)+'</td><td>'+pct(tot.k/tot.s)+'</td><td>—</td><td>—</td></tr>';
+}
+
+/* ---------- plan cards ---------- */
+function renderPlan(){
+  const c=compute();
+  $('#plan-cards').innerHTML=FUT.map(per=>{
+    const delta=c.ek-refKey;
+    const dir=delta>=0?' +'+nf.format(delta):' '+nf.format(delta);
+    const cls=delta>=0?'ok':'err';
+    return '<div class="card kpi"><div class="label">'+fmtMonth(per)+'</div>'+
+      '<div class="v" style="font-size:30px">'+nf1.format(Math.round(c.ek*10)/10)+'</div>'+
+      '<div class="note">EK proyectados · '+nf.format(Math.round(c.ses))+' sesiones · vs ref. '+nf.format(Math.round(refKey/3))+' EK/mes</div>'+
+      '<div style="margin-top:10px"><span class="pill '+cls+'">'+dir+' vs referencia</span></div></div>';
+  }).join('');
+}
+
+/* ---------- channel bars ---------- */
+function chanAgg(periods){
+  const rows=CH.filter(r=>periods.includes(r.period));
+  const agg={}; rows.forEach(r=>{ if(!agg[r.channel])agg[r.channel]={s:0,k:0,e:0}; agg[r.channel].s+=r.sessions; agg[r.channel].k+=r.keyEvents; agg[r.channel].e+=r.events; });
+  const arr=Object.entries(agg).map(([ch,v])=>({ch,s:v.s,k:v.k})).sort((a,b)=>b.s-a.s);
+  return arr;
+}
+function renderChannels(){
+  const refAgg=chanAgg(REF);
+  const totS=refAgg.reduce((a,b)=>a+b.s,0);
+  const refKEmap={}; refAgg.forEach(x=>{refKEmap[x.ch]=x.s>0?x.k/x.s:0;});
+  const c=compute();
+  $('#bars-mix').innerHTML= refAgg.map(x=>{
+    const share=x.s/totS;
+    return '<div class="bar-row"><span>'+x.ch+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,share*100)+'%"></div></div><span class="bar-val">'+pct(share)+'</span></div>';
+  }).join('');
+  $('#bars-channel').innerHTML= refAgg.map(x=>{
+    const share=x.s/totS;
+    const sesSc=c.ses*share;
+    const ekSc=sesSc*refKEmap[x.ch];
+    const share2=(x.s/totS*100).toFixed(1);
+    return '<div class="bar-row"><span>'+x.ch+'</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.max(2,share*100)+'%"></div></div><span class="bar-val">'+nf1.format(ekSc)+' EK</span></div>';
+  }).join('');
+}
+
+/* ---------- table: mix & channel ---------- */
+function renderTables(){
+  const totS=M.reduce((a,b)=>a+b.sessions,0), totK=M.reduce((a,b)=>a+b.keyEvents,0);
+  const agg={}; CH.forEach(r=>{if(!agg[r.channel])agg[r.channel]={s:0,k:0};agg[r.channel].s+=r.sessions;agg[r.channel].k+=r.keyEvents;});
+  const arr=Object.entries(agg).map(([ch,v])=>({ch,s:v.s,k:v.k})).sort((a,b)=>b.s-a.s);
+  $('#c-ncan').textContent=new Set(CH.map(r=>r.channel)).size;
+  const ps=arr.find(x=>x.ch==='Paid Search');
+  $('#c-ps').textContent=pct(ps.s/totS);
+  $('#c-pske').textContent=pct(ps.k/totK);
+  $('#tbl-mix').innerHTML=arr.map(x=>'<tr><td>'+x.ch+'</td><td>'+nf.format(x.s)+'</td><td>'+pct(x.s/totS)+'</td><td>'+nf.format(x.k)+'</td><td>'+pct(x.k/totK)+'</td><td>'+pct(x.k/x.s)+'</td></tr>').join('');
+  $('#tbl-channel').innerHTML=CH.slice().sort((a,b)=>b.period.localeCompare(a.period)).map(r=>'<tr><td>'+fmtMonth(r.period)+'</td><td>'+r.channel+'</td><td>'+nf.format(r.sessions)+'</td><td>'+nf.format(r.engaged)+'</td><td>'+pct(r.eRate)+'</td><td>'+nf.format(r.events)+'</td><td>'+nf.format(r.keyEvents)+'</td><td>'+pct(r.keyRate)+'</td></tr>').join('');
+}
+
+/* ---------- seasonal profile ---------- */
+function renderSeason(){
+  const map={}; M.forEach(m=>{ const mname=m.period.slice(4); const mn=m.period.slice(0,3); if(!map[mn])map[mn]={s:0,k:0,n:0}; map[mn].s+=m.sessions; map[mn].k+=m.keyEvents; map[mn].n++; });
+  const order=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  $('#season-cards').innerHTML=order.map(mn=>{
+    const o=map[mn]; if(!o) return '<div class="season-card"><b>'+mn.toUpperCase()+'</b><span>sin dato</span></div>';
+    return '<div class="season-card"><b>'+mn.toUpperCase()+'</b><span>'+nf.format(Math.round(o.s/o.n))+' ses.</span><div class="rate">'+pct(o.k/o.s)+' EK</div><span>n='+o.n+'</span></div>';
+  }).join('');
+}
+
+/* ---------- hallazgos & palancas ---------- */
+function renderDiag(){
+  const totalS=M.reduce((a,b)=>a+b.sessions,0), totalK=M.reduce((a,b)=>a+b.keyEvents,0);
+  const h=[
+    ['1 · Paid Search sostiene la adquisición', 'Paid Search concentra 67.3% de las sesiones ('+nf.format(341533)+' de '+nf.format(totalS)+') y 74.9% de los eventos clave ('+nf.format(78244)+' de '+nf.format(totalK)+'). El pico de sesiones es feb-25 ('+nf.format(43458)+'), con 32,345 sesiones de Paid Search.' ],
+    ['2 · La conversión proxy se duplica en 2026', 'Eventos clave por sesión pasa de '+pct(55272/327792)+' en 2025 (55,272 EK / 327,792 ses.) a '+pct(49192/180011)+' en 2026 (49,192 / 180,011). Dirigir más tráfico ya rinde mejor por sesión: la palanca de eficiencia gana peso.' ],
+    ['3 · Febrero y marzo 2026 son una anomalía estructural', 'Cardinalidad de rutas 12.7x y 8.9x sobre la mediana (3,682 y 2,578 rutas), concentrada en Direct con baja interacción (14.7% y 22.5%). El propio archivo los marca REVISAR. No son comparables para baseline.' ],
+    ['4 · Junio 2026 es el mejor mes de conversión proxy', 'Máximo mensual: '+pct(MAX_TAS)+' de eventos clave por sesión ('+nf.format(8904)+' EK en jun-26 sobre '+nf.format(19797)+' sesiones). La tasa promedio de referencia jun–ago 26 es '+pct(REF_KE)+'.' ],
+    ['5 · Noviembre 2025 se hunde en conversión proxy', 'nov-25: '+pct(0.0557)+' EK/sesión ('+nf.format(1862)+' EK). Es el mínimo del periodo y sugiere un patrón estacional de cierre de año que el plan debe considerar antes de escalar inversión en noviembre.' ],
+    ['6 · Los ingresos GA4 son cero en todo el histórico', 'Creatividad completa de 20,618 filas arroja total de ingresos 0. Sin capa de ventas no se puede estimar CAC, ROAS ni retorno: la conversión proxy es el techo de evidencia disponible.' ],
+    ['7 · Cobertura incompleta: falta setiembre 2026', 'El histórico solicitado va a sep-26 pero la exportación termina en ago-26. El simulador modela sep-dic 26 como escenario condicionado; para cerrar ene–sep 2026 se requiere la exportación completa de setiembre.' ]
+  ];
+  $('#hallazgos').innerHTML=h.map(x=>'<div class="hallazgo"><strong>'+x[0]+'</strong><p>'+x[1]+'</p></div>').join('');
+  const now='evidencia localizada en hoja «Tendencia mensual»/«Canal mensual»; extracción 2026-09-15';
+  const p=[
+    ['A','Priorizar Paid Search como motor de adquisición','Obj: sostener el canal dominante. Evidencia: hallazgo 1 (67.3% sesiones, 74.9% EK). Acción: mantener o incrementar el share de sesiones de Paid Search antes de reasignar a canales minoritarios. KPI: share de eventos clave por canal.','Esfuerzo bajo','Horizonte 1-2 ciclos','Confianza media-alta','Riesgo: cambio de puja/estacionalidad'],
+    ['B','Explotar la ganancia de eficiencia 2026','Obj: convertir más EK por sesión. Evidencia: hallazgo 2 (16.9%→27.3%). Acción: usar presets +25%/+50% de este simulador para presupuestar; validar con experimento sin reasignación brusca. KPI: EK/sesión mensual.','Esfuerzo medio','Horizonte 2-3 meses','Confianza media','Riesgo: regresión a la media'],
+    ['C','Limpieza y control de calidad feb–mar 2026','Obj: habilitar esos meses como comparable. Evidencia: hallazgo 3. Acción: auditar causa de la cardinalidad Direct e interacción baja; definir si es marcación o cambio de landing. KPI: rutas/mes y % de interacción Direct.','Esfuerzo medio','Horizonte 1 ciclo','Confianza alta en la detección','Riesgo: indeterminación de causa'],
+    ['D','Programar noviembre como mes de riesgo','Obj: evitar caída de conversión al escalar. Evidencia: hallazgo 5 (nov-25 mínimo). Acción: planificar nov-26 contra escenario +25%/+50% y meta de EK, no contra continuidad. KPI: EK/sesión en nov-26.','Esfuerzo bajo','Horizonte previo a nov','Confianza media-alta','Riesgo: estacionalidad no modelada']
+  ];
+  $('#palancas').innerHTML=p.map(x=>'<div class="palanca"><h4>Palanca '+x[0]+' · '+x[1]+'</h4><p style="font-size:13px;color:var(--muted);margin:0">'+x[2]+'</p><div class="kv">'+x.slice(3).map(s=>'<span>'+s+'</span>').join('')+'</div></div>').join('');
+}
+
+/* ---------- xlsx ---------- */
+function crcTable(){let t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;}
+const CRC=crcTable();
+function crc32(buf){let c=0xFFFFFFFF;for(let i=0;i<buf.length;i++)c=CRC[(c^buf[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function ztime(){return 0;} // dos time 0 ok
+function zipStore(files){
+  const enc=new TextEncoder();
+  const out=[]; const cd=[]; let offset=0;
+  for(const f of files){
+    const nameB=enc.encode(f.name); const data=f.data;
+    const crc=crc32(data);
+    const lh=new Uint8Array(30+nameB.length);
+    lh.set([0x50,0x4b,0x03,0x04,20,0,0,0,0,0,0,0],0);
+    const dv=new DataView(lh.buffer);
+    dv.setUint32(14,crc,true); dv.setUint32(18,data.length,true); dv.setUint32(22,data.length,true);
+    dv.setUint16(26,nameB.length,true); dv.setUint16(28,0,true);
+    lh.set(nameB,30);
+    out.push(lh,data);
+    const rec=new Uint8Array(46+nameB.length);
+    rec.set([0x50,0x4b,0x01,0x02,20,0,20,0,0,0,0,0,0,0,0,0],0);
+    const dv2=new DataView(rec.buffer);
+    dv2.setUint32(16,crc,true); dv2.setUint32(20,data.length,true); dv2.setUint32(24,data.length,true);
+    dv2.setUint16(28,nameB.length,true); dv2.setUint16(30,0,true); dv2.setUint16(32,0,true); dv2.setUint32(42,offset,true);
+    rec.set(nameB,46);
+    cd.push(rec); offset+=30+nameB.length+data.length;
+  }
+  const cdBytes=cd.slice(); let sizeAll=offset;
+  const cdLen=cdBytes.reduce((a,b)=>a+b.length,0);
+  const eocd=new Uint8Array(22);
+  const n=cdBytes.length;
+  eocd.set([0x50,0x4b,0x05,0x06,0,0,0,0],0);
+  const dv3=new DataView(eocd.buffer); dv3.setUint16(8,n,true); dv3.setUint16(10,n,true); dv3.setUint32(12,cdLen,true); dv3.setUint32(16,sizeAll,true); dv3.setUint16(20,0,true);
+  const all=[...out,...cdBytes,eocd];
+  let len=0; all.forEach(a=>len+=a.length);
+  const buf=new Uint8Array(len); let p=0; all.forEach(a=>{buf.set(a,p);p+=a.length;});
+  return buf;
+}
+function sxml(rows){
+  let x='<c r="A1" t="inlineStr"><is><t>Simulador Motorex GA4</t></is></c>';
+  // build sheetData
+  const esc=(s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  let cells='';
+  rows.forEach((r,ri)=>{
+    const rr=ri+1; let line='';
+    r.forEach((c,ci)=>{
+      const col=String.fromCharCode(65+ci);
+      if(typeof c==='number') line+='<c r="'+col+rr+'"><v>'+c+'</v></c>';
+      else line+='<c r="'+col+rr+'" t="inlineStr"><is><t>'+esc(c)+'</t></is></c>';
+    });
+    cells+='<row r="'+rr+'">'+line+'</row>';
+  });
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+cells+'</sheetData></worksheet>';
+}
+function makeXlsx(sheets){
+  const ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet4.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>';
+  const rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  const wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((s,i)=>'<sheet name="'+s.name+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>';
+  const wbrels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((s,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'</Relationships>';
+  const enc=new TextEncoder();
+  const files=[
+    {name:'[Content_Types].xml',data:enc.encode(ct)},
+    {name:'_rels/.rels',data:enc.encode(rels)},
+    {name:'xl/workbook.xml',data:enc.encode(wb)},
+    {name:'xl/_rels/workbook.xml.rels',data:enc.encode(wbrels)},
+  ];
+  sheets.forEach((s,i)=>files.push({name:'xl/worksheets/sheet'+(i+1)+'.xml',data:enc.encode(sxml(s.rows))}));
+  return zipStore(files);
+}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
+function downloadXlsx(){
+  const c=compute(); const month=$('#sel-month').value;
+  const c1=[['Simulador Motorex GA4 · Adquisición web',''],['Mes escenario',fmtMonth(month)],['Estado','human_review_required · no compartir con cliente sin aprobación humana'],['Extracción', '2026-09-15']];
+  const res=[['Parámetro','Valor'],['Sesiones objetivo',Math.round(c.ses)],['Eventos clave/sesión (proxy)',+c.tasa.toFixed(4)],['Sesiones con interacción',+c.inter.toFixed(4)],['Inversión hipotética S/',c.inv],['Eventos clave proyectados',+c.ek.toFixed(1)],['Sesiones con interacción',Math.round(c.interSes)],['Eventos totales estimados',Math.round(c.evt)],['Costo por EK hipotético S/',+c.cpk.toFixed(2)],['Tráfico con interacción por EK',+c.traf.toFixed(2)]];
+  const hist=[['Mes','Sesiones','Ses. con interacción','Eventos','Eventos clave','EK/sesión','Estado']].concat(M.map(m=>[fmtMonth(m.period),m.sessions,m.engaged,m.events,m.keyEvents,+m.keyRate.toFixed(4),m.status]));
+  const plan=[['Mes','EK proyectados','Sesiones','Tasa EK']].concat(FUT.map(per=>[fmtMonth(per),+c.ek.toFixed(1),Math.round(c.ses),+c.tasa.toFixed(4)]));
+  const ch=[['Canal','Sesiones ref.','Eventos clave ref.']].concat(chanAgg(REF).map(x=>[x.ch,x.s,x.k]));
+  const blob=new Blob([makeXlsx([{name:'Parámetros',rows:c1},{name:'Resultados',rows:res},{name:'Histórico',rows:hist},{name:'Plan',rows:plan},{name:'Canales referencia',rows:ch}])],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  dl(blob,'motorex_simulador_'+month+'.xlsx');
+}
+
+/* ---------- init ---------- */
+function bind(){
+  const syncSes=(v)=>{$('#in-ses').value=v;$('#rg-ses').value=v;renderAll();};
+  $('#in-ses').addEventListener('input',e=>{renderAll();});
+  $('#rg-ses').addEventListener('input',e=>{$('#in-ses').value=e.target.value;renderAll();});
+  $('#in-tas').addEventListener('input',e=>{markManual();renderAll();});
+  $('#rg-tas').addEventListener('input',e=>{markManual();$('#in-tas').value=e.target.value;renderAll();});
+  $('#in-int').addEventListener('input',e=>{markManual();renderAll();});
+  $('#in-inv').addEventListener('input',e=>{renderAll();});
+  $('#sel-month').addEventListener('change',e=>{renderAll();});
+  $('#presets').addEventListener('click',e=>{
+    const b=e.target.closest('.preset-btn'); if(!b)return;
+    if(b.dataset.preset==='null'){ markManual(); return; }
+    setPreset(b.dataset.preset); renderAll();
+  });
+  $('#btn-reset').addEventListener('click',()=>{
+    st.manual=false; setPreset('25'); st.sessions=Math.round(refSessions/3); st.tasa=REF_KE*100;
+    $('#in-ses').value=st.sessions; $('#rg-ses').value=st.sessions;
+    $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
+    $('#in-int').value=round1(REF_INT*100); $('#in-inv').value=0; renderAll();
+  });
+  $('#btn-xlsx').addEventListener('click',downloadXlsx);
+  /* tabs */
+  const tabs=[['tab-proy','panel-proy'],['tab-can','panel-can']];
+  tabs.forEach(([tb,pb])=>{
+    $('#'+tb).addEventListener('click',()=>{
+      tabs.forEach(([t2,p2])=>{ $('#'+t2).setAttribute('aria-selected','false'); $('#'+p2).hidden=(p2!==pb); });
+      $('#'+tb).setAttribute('aria-selected','true');
+    });
+    $('#'+tb).addEventListener('keydown',e=>{
+      const i=tabs.findIndex(t=>t[0]===tb); let n=null;
+      if(e.key==='ArrowRight')n=(i+1)%tabs.length; if(e.key==='ArrowLeft')n=(i-1+tabs.length)%tabs.length;
+      if(n!==null){e.preventDefault();tabs[n].forEach(x=>{}); $('#'+tabs[n][0]).click(); $('#'+tabs[n][0]).focus();}
+    });
+  });
+}
+function renderAll(){
+  renderRes(); renderHist(); renderSeason(); renderDiag();
+  renderTables(); renderChannels();
+}
+function setDefaults(){
+  st.sessions=Math.round(refSessions/3); st.tasa=REF_KE*100; st.int=REF_INT*100; st.inv=0;
+  $('#in-ses').value=st.sessions; $('#rg-ses').value=st.sessions;
+  $('#in-tas').value=round1(st.tasa); $('#rg-tas').value=st.tasa;
+  $('#in-int').value=round1(st.int); $('#in-inv').value=0;
+  $('#hint-ses').textContent=nf.format(Math.round(refSessions/3))+' ses/mes promedio (jun–ago 26)';
+  $('#hint-tas').textContent=pct(REF_KE)+' · max '+pct(MAX_TAS);
+  $('#max-tas').textContent=pct(MAX_TAS);
+  $('#hint-int').textContent=pct(REF_INT);
+  /* url preset */
+  const u=new URLSearchParams(location.search);
+  const p=u.get('preset'); if(p==='plus25')setPreset('25'); else if(p==='plus50')setPreset('50'); else if(p==='base')setPreset('0'); else setPreset('25');
+  const m=u.get('month'); if(FUT.includes(m))$('#sel-month').value=m;
+}
+setDefaults();
+bind();
+renderAll();
+</script>
+</body>
+</html>
